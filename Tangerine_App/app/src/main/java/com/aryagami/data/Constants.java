@@ -8,10 +8,10 @@ public class Constants {
 
    // #Testing Server Url
    //public static final String serverURL = "http://10.20.15.3:4080/";
-     //public static final String serverURL = "http://41.217.232.48:4080/";
+   public static final String serverURL = "http://41.217.232.48:4080/";
 
     // #Live Server Url
-    public static final String serverURL = "http://10.20.15.41/";
+    //public static final String serverURL = "http://10.20.15.41/";
      //public static final String serverURL = "http://41.217.232.48/";
 
     //for Pramod

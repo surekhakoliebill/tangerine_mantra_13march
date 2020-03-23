@@ -78,6 +78,7 @@ public class OnDemandNewOrderActivity extends AppCompatActivity {
 
         RegistrationData.setRefugeeThumbImageDrawable(null);
         RegistrationData.setCapturedFingerprintDrawable(null);
+        RegistrationData.setIsmatched(false);
 
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 

@@ -171,7 +171,7 @@ public class UserRegistration implements DataModel, Serializable {
     public String sex;
     public Integer yearOfBirth;
     public String fingerprint;
-
+    public Boolean enableMobileMoneyReg;
 
 
     public static class UserDocCommand implements Serializable {

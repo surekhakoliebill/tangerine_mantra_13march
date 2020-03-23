@@ -181,7 +181,7 @@ public class OnDemandAccountSetupActivity extends AppCompatActivity {
 
        if(userRegistration != null)
            if(userRegistration.registrationType != null) {
-               if (userRegistration.registrationType.equals("personal")) {
+               if (userRegistration.registrationType.equals("personal")||userRegistration.registrationType.equals("retailer")) {
                    accountsetupPersonal.setVisibility(View.VISIBLE);
                    accountsetupCompany.setVisibility(View.GONE);
 
@@ -331,7 +331,7 @@ public class OnDemandAccountSetupActivity extends AppCompatActivity {
                         }
                     }
 
-                } else if (userRegistration.registrationType.equals("personal")) {
+                } else if (userRegistration.registrationType.equals("personal")||userRegistration.registrationType.equals("retailer")) {
 
                     if (newOrderCommand != null) {
                         UserRegistration userRegistration2 = collectUserDocs();
@@ -359,7 +359,7 @@ public class OnDemandAccountSetupActivity extends AppCompatActivity {
                             }
 
                             RegistrationData.setFilePrefix(filePrefix);
-                            RegistrationData.setUserFingerprintsList(userFingerprintsList);
+                            //RegistrationData.setUserFingerprintsList(userFingerprintsList);
                             newOrderCommand.userInfo = userRegistration;
                             NewOrderCommand.setOnDemandNewOrderCommand(newOrderCommand);
                             if (!newOrderCommand.isPostpaid) {
@@ -914,7 +914,6 @@ public class OnDemandAccountSetupActivity extends AppCompatActivity {
             MyToast.makeMyToast(activity, getResources().getString(R.string.Please_upload_profile_document), Toast.LENGTH_LONG);
             return null;
         }
-
         if (RegistrationData.getIsUgandan()){
             if (idImages.size() == 0) {
                 MyToast.makeMyToast(activity, getResources().getString(R.string.Please_upload_nin_document), Toast.LENGTH_LONG);
@@ -922,8 +921,7 @@ public class OnDemandAccountSetupActivity extends AppCompatActivity {
             }
 
             if(RegistrationData.getCapturedFingerprintDrawable() == null){
-               /* MyToast.makeMyToast(activity, "Please upload NIN User Fingerprint.", Toast.LENGTH_LONG);
-                return null;*/
+
                 if(RegistrationData.getUserThumbImageDrawable() == null){
                     MyToast.makeMyToast(activity, "Please upload thumb fingerprint.", Toast.LENGTH_LONG);
                     return null;
@@ -1238,7 +1236,14 @@ public class OnDemandAccountSetupActivity extends AppCompatActivity {
 
         user.resellerCode = UserSession.getResellerId(activity);
         user.currency = "UGX";
-        user.userGroup = "Consumer";
+        //user.userGroup = "Consumer";
+
+        if (userRegistration.registrationType.equals("personal")||userRegistration.registrationType.equals("company")){
+            user.userGroup = "Consumer";
+        }else if  (userRegistration.registrationType.equals("retailer")){
+            user.userGroup = "Reseller Retailer";
+        }
+
         return user;
     }
 

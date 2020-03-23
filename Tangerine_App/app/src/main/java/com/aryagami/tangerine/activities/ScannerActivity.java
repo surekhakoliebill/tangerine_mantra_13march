@@ -85,6 +85,8 @@ public class ScannerActivity extends AppCompatActivity implements BarcodeScanner
     @Override
     public void onResume() {
         super.onResume();
+        //mScannerView.setAspectTolerance(0.5f);
+        mScannerView.setResultHandler(this);
         startCamera();
     }
 

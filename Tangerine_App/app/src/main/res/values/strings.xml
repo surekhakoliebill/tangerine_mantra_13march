@@ -141,7 +141,7 @@
         <string name="Read_external_storage_permission">Read External Storage permission needed. Please allow in App Settings for additional functionality.</string>
 
         <string name="save_alert">SAVE</string>
-        <string name="sim_swap">Sim Swap Requested Done.</string>
+        <string name="sim_swap">Sim Swap Requested Successfully.</string>
         <string name="vouucher_assigned">Voucher Assigned Successfully.</string>
         <string name="amount_credit">Amount Credit Successfully.</string>
 
