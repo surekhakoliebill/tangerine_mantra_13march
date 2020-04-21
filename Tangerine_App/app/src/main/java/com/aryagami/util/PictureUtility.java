@@ -2,7 +2,6 @@ package com.aryagami.util;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,13 +24,11 @@ import android.widget.Toast;
 
 import com.aryagami.BuildConfig;
 import com.aryagami.R;
-import com.aryagami.data.UserRegistration;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.soundcloud.android.crop.Crop;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.codec.binary.Base64;
@@ -39,7 +36,6 @@ import org.apache.commons.codec.binary.Base64;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;

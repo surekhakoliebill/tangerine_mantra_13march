@@ -113,6 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     resellerLoginInfo = (ResellerLoginInfo) data.get(0);
                                                     if(resellerLoginInfo.status.equals("success")) {
                                                         UserSession.setResellerId(activity, resellerLoginInfo.userInfo.resellerId);
+                                                        UserSession.setResellerCode(activity, resellerLoginInfo.userInfo.resellerCode);
                                                         UserSession.setResellerName(activity, resellerLoginInfo.userInfo.company);
                                                         navigationData.company = resellerLoginInfo.userInfo.company.toString();
                                                         UserSession.setAggregator(activity, resellerLoginInfo.aggregator);

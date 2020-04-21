@@ -297,7 +297,16 @@ public class NavigationMainActivity extends AppCompatActivity
                             }else if (id == 8) {
                                 Intent intent1 = new Intent(getApplicationContext(), BuildVersion.class);
                                 startActivity(intent1);
-                            } else if (id == 9) {
+                            }else if (id == 9) {
+                                Intent intent1 = new Intent(getApplicationContext(), BundleRechargeActivity.class);
+                                startActivity(intent1);
+                            } else if (id == 10) {
+                                Intent intent1 = new Intent(getApplicationContext(), AirtimeValueRechargesActivity.class);
+                                startActivity(intent1);
+                            }else if (id == 11) {
+                                Intent intent1 = new Intent(getApplicationContext(), ResellerRechargesListActivity.class);
+                                startActivity(intent1);
+                            }else if (id == 12) {
 
                                 RestServiceHandler serviceHandler = new RestServiceHandler();
                                 try {
@@ -415,6 +424,9 @@ public class NavigationMainActivity extends AppCompatActivity
                     .addHeaderModel(new HeaderModel(staffRegistration))
                     .addHeaderModel(new HeaderModel("Staff Users"))
                     .addHeaderModel(new HeaderModel("App Version"))
+                    .addHeaderModel(new HeaderModel("Bundle Recharge"))
+                    .addHeaderModel(new HeaderModel("Airtime Recharge"))
+                    .addHeaderModel(new HeaderModel("Latest Recharges"))
                     .addHeaderModel(new HeaderModel("Logout"));
 
         } else if(UserSession.getUserGroup(activity).equals("Reseller Distributor")){
@@ -462,7 +474,16 @@ public class NavigationMainActivity extends AppCompatActivity
                             }else if (id == 8) {
                                 Intent intent1 = new Intent(getApplicationContext(), BuildVersion.class);
                                 startActivity(intent1);
-                            } else if (id == 9) {
+                            }else if (id == 9) {
+                                Intent intent1 = new Intent(getApplicationContext(), BundleRechargeActivity.class);
+                                startActivity(intent1);
+                            }else if (id == 10) {
+                                Intent intent1 = new Intent(getApplicationContext(), AirtimeValueRechargesActivity.class);
+                                startActivity(intent1);
+                            }else if (id == 11) {
+                                Intent intent1 = new Intent(getApplicationContext(), ResellerRechargesListActivity.class);
+                                startActivity(intent1);
+                            } else if (id == 12) {
 
                                 RestServiceHandler serviceHandler = new RestServiceHandler();
                                 try {
@@ -593,6 +614,9 @@ public class NavigationMainActivity extends AppCompatActivity
                     .addHeaderModel(new HeaderModel(staffRegistration))
                     .addHeaderModel(new HeaderModel("Staff Users"))
                     .addHeaderModel(new HeaderModel("App Version"))
+                    .addHeaderModel(new HeaderModel("Bundle Recharge"))
+                    .addHeaderModel(new HeaderModel("Airtime Recharge"))
+                    .addHeaderModel(new HeaderModel("Latest Recharges"))
                     .addHeaderModel(new HeaderModel("Logout"));
 
         } else if(UserSession.getUserGroup(activity).equals("Reseller Aggregator")) {
@@ -642,10 +666,16 @@ public class NavigationMainActivity extends AppCompatActivity
                             } else if (id == 9) {
                                 Intent intent1 = new Intent(getApplicationContext(), BuildVersion.class);
                                 startActivity(intent1);
-                            }/*else if (id == 10) {
+                            }else if (id == 10) {
                                 Intent intent1 = new Intent(getApplicationContext(), BundleRechargeActivity.class);
                                 startActivity(intent1);
-                            }*/else if (id == 10) {
+                            }else if (id == 11) {
+                                Intent intent1 = new Intent(getApplicationContext(), AirtimeValueRechargesActivity.class);
+                                startActivity(intent1);
+                            }else if (id == 12) {
+                                Intent intent1 = new Intent(getApplicationContext(), ResellerRechargesListActivity.class);
+                                startActivity(intent1);
+                            }else if (id == 13) {
 
                                 RestServiceHandler serviceHandler = new RestServiceHandler();
                                 try {
@@ -773,7 +803,9 @@ public class NavigationMainActivity extends AppCompatActivity
                     .addHeaderModel(new HeaderModel("Staff Users"))
                     .addHeaderModel(new HeaderModel("Sales Report"))
                     .addHeaderModel(new HeaderModel("App Version"))
-                    //.addHeaderModel(new HeaderModel("Bundle Recharge"))
+                    .addHeaderModel(new HeaderModel("Bundle Recharge"))
+                    .addHeaderModel(new HeaderModel("Airtime Recharge"))
+                    .addHeaderModel(new HeaderModel("Latest Recharges"))
                     .addHeaderModel(new HeaderModel("Logout"));
         }
         getAllRoles();

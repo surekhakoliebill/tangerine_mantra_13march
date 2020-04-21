@@ -129,78 +129,78 @@
 
     // copied from another APP
 
-         <string name="nav_header_title">DV Infosys</string>
-        <string name="nav_header_subtitle">dvinfosys0@gmail.com</string>
-        <string name="nav_header_desc">Navigation header</string>
+    <string name="nav_header_title">DV Infosys</string>
+    <string name="nav_header_subtitle">dvinfosys0@gmail.com</string>
+    <string name="nav_header_desc">Navigation header</string>
 
-        <string name="spinner_title">PROMPT</string>
+    <string name="spinner_title">PROMPT</string>
 
-        <string name="Please_upload_refugee_document">Please Upload Refugee Document.</string>
-        <string name="drawer_open">Open navigation drawer</string>
-        <string name="drawer_close">Close navigation drawer</string>
-        <string name="Read_external_storage_permission">Read External Storage permission needed. Please allow in App Settings for additional functionality.</string>
+    <string name="Please_upload_refugee_document">Please Upload Refugee Document.</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="Read_external_storage_permission">Read External Storage permission needed. Please allow in App Settings for additional functionality.</string>
 
-        <string name="save_alert">SAVE</string>
-        <string name="sim_swap">Sim Swap Requested Successfully.</string>
-        <string name="vouucher_assigned">Voucher Assigned Successfully.</string>
-        <string name="amount_credit">Amount Credit Successfully.</string>
-
-
-        <string name="Successfully_uploaded_user_profile">Successfully Updated User Profe</string>
-        <string name="save_and_continue">Save &amp; Continue</string>
-        <string name="upload_pdf">Upload Pdf</string>
-        <string name="generate_pdf">Generate Pdf</string>
-        <string name="Pdf_dialog">Select Pdf</string>
-
-        <string name="sender_num">Sender Number:</string>
-        <string name="message1">Sending OTP for Testing</string>
-        <string name="generating_otp">Generating OTP...</string>
-        <string name="logging">Logging...</string>
-        <string name="user_name">USERNAME</string>
-        <string name="reserve_and_continue"><![CDATA[Reserve & Continue]]></string>
+    <string name="save_alert">SAVE</string>
+    <string name="sim_swap">Sim Swap Requested Successfully.</string>
+    <string name="vouucher_assigned">Voucher Assigned Successfully.</string>
+    <string name="amount_credit">Amount Credit Successfully.</string>
 
 
-        <!--Barcode Reader-->
+    <string name="Successfully_uploaded_user_profile">Successfully Updated User Profe</string>
+    <string name="save_and_continue">Save &amp; Continue</string>
+    <string name="upload_pdf">Upload Pdf</string>
+    <string name="generate_pdf">Generate Pdf</string>
+    <string name="Pdf_dialog">Select Pdf</string>
 
-        <string name="scanner_activity">ZXing Scanner - Full Activity</string>
-        <string name="scanner_fragment_activity">ZXing Scanner - Full Fragment Activity</string>
-        <string name="simple_scanner_activity">ZXing Scanner - Simple Activity</string>
-        <string name="custom_view_finder_scanner_activity">ZXing Scanner - Custom View Finder Activity</string>
-        <string name="scaling_scanner_activity">ZXing Scanner - Scaling Activity</string>
-        <string name="simple_scanner_fragment_activity">ZXing Scanner - Simple Fragment Activity</string>
-        <string name="full_screen_scanner_fragment_activity">ZXing Scanner - Full Screen Fragment Activity</string>
-        <string name="simple_activity_sample">Simple Activity Sample</string>
-        <string name="simple_fragment_sample">Simple Fragment Sample</string>
-        <string name="activity_sample">Scan Document</string>
-        <string name="fragment_sample">Full Fragment Sample</string>
-        <string name="full_screen_sample">Full Screen Fragment Sample</string>
-        <string name="custom_view_finder_sample">Custom View Finder Sample</string>
-        <string name="scaling_sample">Scaling Sample</string>
-        <string name="toggle_flash">Flash</string>
-        <string name="flash_on">Flash [ON]</string>
-        <string name="flash_off">Flash [OFF]</string>
-        <string name="auto_focus_on">Auto Focus [ON]</string>
-        <string name="auto_focus_off">Auto Focus [OFF]</string>
-        <string name="formats">Formats</string>
-        <string name="choose_formats">Choose Formats</string>
-        <string name="select_camera">Select a Camera</string>
-        <string name="ok_button">OK</string>
-        <string name="cancel_button">Cancel</string>
-        <string name="gps_permission_allow_to_access_location_data">ALLOW PERMISSIONS</string>
-        <bool name="cameraPreviewShouldFillView">true</bool>
+    <string name="sender_num">Sender Number:</string>
+    <string name="message1">Sending OTP for Testing</string>
+    <string name="generating_otp">Generating OTP...</string>
+    <string name="logging">Logging...</string>
+    <string name="user_name">USERNAME</string>
+    <string name="reserve_and_continue"><![CDATA[Reserve & Continue]]></string>
 
-        <string name="title_activity_preference">Preference</string>
 
-        <string name="text_alert">Alert</string>
-        <string name="text_flash_on">Flash [ON]</string>
-        <string name="text_flash_off">Flash [OFF]</string>
-        <string name="text_rotate">Rotate</string>
-        <string name="text_landscape_simulated">Portrait mode with design in landscape</string>
-        <string name="text_landscape">Landscape mode</string>
+    <!--Barcode Reader-->
 
-        <string name="msg_camera_framework_bug">Sorry, the Android camera encountered a problem. You may need to restart the device.</string>
-        <string name="msg_camera_permission">The app need access to camera for read barcodes</string>
-        <string name="msg_camera_permission_denied">Camera permission denied</string>
+    <string name="scanner_activity">ZXing Scanner - Full Activity</string>
+    <string name="scanner_fragment_activity">ZXing Scanner - Full Fragment Activity</string>
+    <string name="simple_scanner_activity">ZXing Scanner - Simple Activity</string>
+    <string name="custom_view_finder_scanner_activity">ZXing Scanner - Custom View Finder Activity</string>
+    <string name="scaling_scanner_activity">ZXing Scanner - Scaling Activity</string>
+    <string name="simple_scanner_fragment_activity">ZXing Scanner - Simple Fragment Activity</string>
+    <string name="full_screen_scanner_fragment_activity">ZXing Scanner - Full Screen Fragment Activity</string>
+    <string name="simple_activity_sample">Simple Activity Sample</string>
+    <string name="simple_fragment_sample">Simple Fragment Sample</string>
+    <string name="activity_sample">Scan Document</string>
+    <string name="fragment_sample">Full Fragment Sample</string>
+    <string name="full_screen_sample">Full Screen Fragment Sample</string>
+    <string name="custom_view_finder_sample">Custom View Finder Sample</string>
+    <string name="scaling_sample">Scaling Sample</string>
+    <string name="toggle_flash">Flash</string>
+    <string name="flash_on">Flash [ON]</string>
+    <string name="flash_off">Flash [OFF]</string>
+    <string name="auto_focus_on">Auto Focus [ON]</string>
+    <string name="auto_focus_off">Auto Focus [OFF]</string>
+    <string name="formats">Formats</string>
+    <string name="choose_formats">Choose Formats</string>
+    <string name="select_camera">Select a Camera</string>
+    <string name="ok_button">OK</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="gps_permission_allow_to_access_location_data">ALLOW PERMISSIONS</string>
+    <bool name="cameraPreviewShouldFillView">true</bool>
+
+    <string name="title_activity_preference">Preference</string>
+
+    <string name="text_alert">Alert</string>
+    <string name="text_flash_on">Flash [ON]</string>
+    <string name="text_flash_off">Flash [OFF]</string>
+    <string name="text_rotate">Rotate</string>
+    <string name="text_landscape_simulated">Portrait mode with design in landscape</string>
+    <string name="text_landscape">Landscape mode</string>
+
+    <string name="msg_camera_framework_bug">Sorry, the Android camera encountered a problem. You may need to restart the device.</string>
+    <string name="msg_camera_permission">The app need access to camera for read barcodes</string>
+    <string name="msg_camera_permission_denied">Camera permission denied</string>
 
     // from MFS
 

@@ -92,7 +92,7 @@ public class ETopupRechargeActivity extends AppCompatActivity {
         amountLayout = (LinearLayout)findViewById(R.id.amount_layout);
         final EditText amount = (EditText) findViewById(R.id.E_topup_amount);
         currentLocation = (Button)findViewById(R.id.current_location);
-       // this.txtLocation = (TextView) findViewById(R.id.txtLocation);
+        // this.txtLocation = (TextView) findViewById(R.id.txtLocation);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         locationRequest = LocationRequest.create();
@@ -125,10 +125,11 @@ public class ETopupRechargeActivity extends AppCompatActivity {
                             MyToast.makeMyToast(activity,"Please Enter The Amount", Toast.LENGTH_SHORT);
                         }else{
                             amountValue  = amount.getText().toString();
+
                             RestServiceHandler serviceHandler = new RestServiceHandler();
                             try {
                                 progressDialog = ProgressDialogUtil.startProgressDialog(activity, "Please Wait.....");
-                                serviceHandler.postAggregatorTopup(coordinates, UserSession.getResellerId(activity), subscriptionId, amountValue, new RestServiceHandler.Callback() {
+                                serviceHandler.postAggregatorTopup(coordinates, UserSession.getResellerId(activity), subscriptionId, amountValue, false,new RestServiceHandler.Callback() {
                                     @Override
                                     public void success(DataModel.DataType type, List<DataModel> data) {
                                         if (isFinishing()) {
@@ -158,17 +159,52 @@ public class ETopupRechargeActivity extends AppCompatActivity {
                                                 ReDirectToParentActivity.callLoginActivity(activity);
                                             } else {
 
-                                                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
-                                                alertDialog.setCancelable(false);
-                                                alertDialog.setTitle("Message!");
-                                                alertDialog.setMessage("STATUS:" + amountCredit.status.toString());
-                                                alertDialog.setNeutralButton(getResources().getString(R.string.ok),
-                                                        new DialogInterface.OnClickListener() {
-                                                            public void onClick(DialogInterface dialog, int id) {
-                                                                dialog.dismiss();
+                                                if(amountCredit.immediateRecharge != null){
+                                                    if(amountCredit.immediateRecharge){
+
+                                                        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+                                                        alertDialog.setCancelable(false);
+                                                        alertDialog.setTitle("Message!");
+                                                        alertDialog.setMessage("You already have the same amount recharged, would you like to continue again?");
+                                                        alertDialog.setPositiveButton(getResources().getString(R.string.ok),
+                                                                new DialogInterface.OnClickListener() {
+                                                                    public void onClick(DialogInterface dialog, int id) {
+                                                                        dialog.dismiss();
+                                                                        eTopupRecharge(coordinates, UserSession.getResellerId(activity), subscriptionId, amountValue, true);
+                                                                    }
+                                                                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                                dialogInterface.dismiss();
                                                             }
                                                         });
-                                                alertDialog.show();
+                                                        alertDialog.show();
+                                                    }else{
+                                                        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+                                                        alertDialog.setCancelable(false);
+                                                        alertDialog.setTitle("Message!");
+                                                        alertDialog.setMessage("STATUS:" + amountCredit.status.toString());
+                                                        alertDialog.setNeutralButton(getResources().getString(R.string.ok),
+                                                                new DialogInterface.OnClickListener() {
+                                                                    public void onClick(DialogInterface dialog, int id) {
+                                                                        dialog.dismiss();
+                                                                    }
+                                                                });
+                                                        alertDialog.show();
+                                                    }
+                                                }else{
+                                                    final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+                                                    alertDialog.setCancelable(false);
+                                                    alertDialog.setTitle("Message!");
+                                                    alertDialog.setMessage("STATUS:" + amountCredit.status.toString());
+                                                    alertDialog.setNeutralButton(getResources().getString(R.string.ok),
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    dialog.dismiss();
+                                                                }
+                                                            });
+                                                    alertDialog.show();
+                                                }
                                             }
                                         }
                                     }
@@ -207,66 +243,66 @@ public class ETopupRechargeActivity extends AppCompatActivity {
                         return;
                     }
 
-                        MSISDN = "256"+msisdnEditText.getText().toString().trim();
-                        progressDialog = ProgressDialogUtil.startProgressDialog(activity, "please wait......");
-                        RestServiceHandler serviceHandler = new RestServiceHandler();
+                    MSISDN = "256"+msisdnEditText.getText().toString().trim();
+                    progressDialog = ProgressDialogUtil.startProgressDialog(activity, "please wait......");
+                    RestServiceHandler serviceHandler = new RestServiceHandler();
 
-                        try {
-                            serviceHandler.checkSubscription(MSISDN, new RestServiceHandler.Callback() {
-                                @Override
-                                public void success(DataModel.DataType type, List<DataModel> data) {
-                                    final UserLogin userLogin = (UserLogin) data.get(0);
-                                    subscriptionId = userLogin.subscriptionId;
-                                    if (userLogin.status.equals("success")) {
-                                        ProgressDialogUtil.stopProgressDialog(progressDialog);
+                    try {
+                        serviceHandler.checkSubscription(MSISDN, new RestServiceHandler.Callback() {
+                            @Override
+                            public void success(DataModel.DataType type, List<DataModel> data) {
+                                final UserLogin userLogin = (UserLogin) data.get(0);
+                                subscriptionId = userLogin.subscriptionId;
+                                if (userLogin.status.equals("success")) {
+                                    ProgressDialogUtil.stopProgressDialog(progressDialog);
+                                    final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+                                    alertDialog.setCancelable(false);
+                                    alertDialog.setIcon(R.drawable.success_icon);
+                                    alertDialog.setMessage("Subscription Found!");
+
+                                    alertDialog.setNeutralButton(getResources().getString(R.string.ok),
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.dismiss();
+
+                                                    amountLayout.setVisibility(View.VISIBLE);
+                                                    rechargeButton.setVisibility(View.VISIBLE);
+
+                                                }
+                                            });
+                                    alertDialog.show();
+                                } else {
+                                    if (userLogin.status.equals("INVALID_SESSION")) {
+                                        ReDirectToParentActivity.callLoginActivity(activity);
+                                    } else {
                                         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
                                         alertDialog.setCancelable(false);
-                                        alertDialog.setIcon(R.drawable.success_icon);
-                                        alertDialog.setMessage("Subscription Found!");
-
+                                        alertDialog.setMessage("STATUS:" + userLogin.status.toString());
                                         alertDialog.setNeutralButton(getResources().getString(R.string.ok),
                                                 new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int id) {
                                                         dialog.dismiss();
-
-                                                        amountLayout.setVisibility(View.VISIBLE);
-                                                        rechargeButton.setVisibility(View.VISIBLE);
-
+                                                        amountLayout.setVisibility(View.INVISIBLE);
+                                                        rechargeButton.setVisibility(View.INVISIBLE);
+                                                        ProgressDialogUtil.stopProgressDialog(progressDialog);
                                                     }
                                                 });
                                         alertDialog.show();
-                                    } else {
-                                        if (userLogin.status.equals("INVALID_SESSION")) {
-                                            ReDirectToParentActivity.callLoginActivity(activity);
-                                        } else {
-                                            final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
-                                            alertDialog.setCancelable(false);
-                                            alertDialog.setMessage("STATUS:" + userLogin.status.toString());
-                                            alertDialog.setNeutralButton(getResources().getString(R.string.ok),
-                                                    new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int id) {
-                                                            dialog.dismiss();
-                                                            amountLayout.setVisibility(View.INVISIBLE);
-                                                            rechargeButton.setVisibility(View.INVISIBLE);
-                                                            ProgressDialogUtil.stopProgressDialog(progressDialog);
-                                                        }
-                                                    });
-                                            alertDialog.show();
-                                        }
                                     }
                                 }
+                            }
 
-                                @Override
-                                public void failure(RestServiceHandler.ErrorCode error, String status) {
-                                    ProgressDialogUtil.stopProgressDialog(progressDialog);
-                                    BugReport.postBugReport(activity, Constants.emailId,"ERROR"+error+"STATUS:"+status,"Activity");
-                                }
-                            });
+                            @Override
+                            public void failure(RestServiceHandler.ErrorCode error, String status) {
+                                ProgressDialogUtil.stopProgressDialog(progressDialog);
+                                BugReport.postBugReport(activity, Constants.emailId,"ERROR"+error+"STATUS:"+status,"Activity");
+                            }
+                        });
 
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            BugReport.postBugReport(activity, Constants.emailId,"Message"+e.getMessage()+"\n ERROR:-"+e.getCause(),"Activity");
-                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        BugReport.postBugReport(activity, Constants.emailId,"Message"+e.getMessage()+"\n ERROR:-"+e.getCause(),"Activity");
+                    }
 
                 }
             }
@@ -294,6 +330,96 @@ public class ETopupRechargeActivity extends AppCompatActivity {
                 }
             }
         };*/
+    }
+
+    private void eTopupRecharge(NewOrderCommand.LocationCoordinates coordinates, String resellerId, String subscriptionId, String amountValue, boolean b) {
+
+        RestServiceHandler serviceHandler = new RestServiceHandler();
+        try {
+            progressDialog = ProgressDialogUtil.startProgressDialog(activity, "Please Wait.....");
+            serviceHandler.postAggregatorTopup(coordinates, UserSession.getResellerId(activity), subscriptionId, amountValue, true,new RestServiceHandler.Callback() {
+                @Override
+                public void success(DataModel.DataType type, List<DataModel> data) {
+                    if (isFinishing()) {
+                        return;
+                    }
+
+                    UserLogin amountCredit = (UserLogin) data.get(0);
+                    if (amountCredit.status.equals("success")) {
+
+                        ProgressDialogUtil.stopProgressDialog(progressDialog);
+                        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+                        alertDialog.setCancelable(false);
+                        alertDialog.setIcon(R.drawable.success_icon);
+                        alertDialog.setMessage(getResources().getString(R.string.amount_credit));
+                        alertDialog.setNeutralButton(getResources().getString(R.string.ok),
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.dismiss();
+                                        startParentActivity();
+                                    }
+                                });
+                        alertDialog.show();
+
+                    } else {
+                        ProgressDialogUtil.stopProgressDialog(progressDialog);
+                        if (amountCredit.status.equals("INVALID_SESSION")) {
+                            ReDirectToParentActivity.callLoginActivity(activity);
+                        } else {
+
+                            if(amountCredit.immediateRecharge != null){
+                                if(amountCredit.immediateRecharge){
+
+                                    final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+                                    alertDialog.setCancelable(false);
+                                    alertDialog.setTitle("Message!");
+                                    alertDialog.setMessage("");
+                                    alertDialog.setPositiveButton(getResources().getString(R.string.ok),
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.dismiss();
+                                                    eTopupRecharge(coordinates, UserSession.getResellerId(activity), subscriptionId, amountValue, true);
+
+                                                }
+                                            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.dismiss();
+
+                                        }
+                                    });
+                                    alertDialog.show();
+                                }else{
+                                    final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+                                    alertDialog.setCancelable(false);
+                                    alertDialog.setTitle("Message!");
+                                    alertDialog.setMessage("STATUS:" + amountCredit.status.toString());
+                                    alertDialog.setNeutralButton(getResources().getString(R.string.ok),
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.dismiss();
+                                                }
+                                            });
+                                    alertDialog.show();
+                                }
+                            }
+
+
+                        }
+                    }
+                }
+
+                @Override
+                public void failure(RestServiceHandler.ErrorCode error, String status) {
+                    ProgressDialogUtil.stopProgressDialog(progressDialog);
+                    BugReport.postBugReport(activity, Constants.emailId,"ERROR"+error+"STATUS:"+status,"Activity");
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+            BugReport.postBugReport(activity, Constants.emailId,"Message"+e.getMessage()+"\n ERROR:-"+e.getCause(),"Activity");
+        }
+
     }
 
 
@@ -330,7 +456,7 @@ public class ETopupRechargeActivity extends AppCompatActivity {
         super.onResume();
         turnOnGpsLocation();
         getLocation();
-       // locationCallback();
+        // locationCallback();
         CheckNetworkConnection.cehckNetwork(ETopupRechargeActivity.this);
     }
 
@@ -375,7 +501,7 @@ public class ETopupRechargeActivity extends AppCompatActivity {
                         coordinates.latitudeValue = location.getLatitude();
                         coordinates.longitudeValue = location.getLongitude();
 
-                     //   MyToast.makeMyToast(activity, coordinates.latitudeValue+" * "+coordinates.longitudeValue, Toast.LENGTH_SHORT);
+                        //   MyToast.makeMyToast(activity, coordinates.latitudeValue+" * "+coordinates.longitudeValue, Toast.LENGTH_SHORT);
 
                     } else {
                         mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
@@ -397,7 +523,7 @@ public class ETopupRechargeActivity extends AppCompatActivity {
                     if (location != null) {
                         coordinates.latitudeValue = location.getLatitude();
                         coordinates.longitudeValue = location.getLongitude();
-                      //  MyToast.makeMyToast(activity, coordinates.latitudeValue+"L"+coordinates.longitudeValue, Toast.LENGTH_SHORT);
+                        //  MyToast.makeMyToast(activity, coordinates.latitudeValue+"L"+coordinates.longitudeValue, Toast.LENGTH_SHORT);
                         //  txtLocation.setText(String.format(Locale.US, "%s L %s", coordinates.latitudeValue, coordinates.longitudeValue));
 
                         if (!isContinue && mFusedLocationClient != null) {
@@ -432,7 +558,7 @@ public class ETopupRechargeActivity extends AppCompatActivity {
                                     coordinates.latitudeValue = location.getLatitude();
                                     coordinates.longitudeValue = location.getLongitude();
 
-                                   // MyToast.makeMyToast(activity, coordinates.latitudeValue+" p "+coordinates.longitudeValue, Toast.LENGTH_SHORT);
+                                    // MyToast.makeMyToast(activity, coordinates.latitudeValue+" p "+coordinates.longitudeValue, Toast.LENGTH_SHORT);
                                 } else {
                                     mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
                                 }

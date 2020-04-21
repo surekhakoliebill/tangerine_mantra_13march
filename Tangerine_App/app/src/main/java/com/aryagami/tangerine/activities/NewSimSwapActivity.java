@@ -39,7 +39,7 @@ public class NewSimSwapActivity extends AppCompatActivity {
     ListView simSwapList;
     SimSwapList[] simListsArray;
 
-    public  void onTrimMemory(int level) {
+    public void onTrimMemory(int level) {
         System.gc();
     }
     @Override

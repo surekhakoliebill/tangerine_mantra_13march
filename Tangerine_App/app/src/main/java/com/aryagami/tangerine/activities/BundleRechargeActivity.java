@@ -22,6 +22,7 @@ import com.aryagami.R;
 import com.aryagami.data.Constants;
 import com.aryagami.data.DataModel;
 import com.aryagami.data.PlanGroup;
+import com.aryagami.data.RegistrationData;
 import com.aryagami.data.UserLogin;
 import com.aryagami.restapis.RestServiceHandler;
 import com.aryagami.tangerine.adapters.ViewPagerAdapter;
@@ -30,6 +31,7 @@ import com.aryagami.tangerine.fragments.JuiceUpPlansFragment;
 import com.aryagami.tangerine.fragments.SmsPlansFragment;
 import com.aryagami.tangerine.fragments.StarterPlansFragment;
 import com.aryagami.tangerine.fragments.VoiceBundleFragment;
+import com.aryagami.tangerine.fragments.VoicePlansFragment;
 import com.aryagami.util.BugReport;
 import com.aryagami.util.MyToast;
 import com.aryagami.util.ProgressDialogUtil;
@@ -46,6 +48,7 @@ public class BundleRechargeActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     PlanGroup[] planGroups,planGroups1;
     VoiceBundleFragment voceBundleFragment;
+    VoicePlansFragment voicePlansFragment;
     DataPlansFragment dataPlansFragment;
     JuiceUpPlansFragment juiceUpPlansFragment;
     StarterPlansFragment starterPlansFragment;
@@ -55,9 +58,10 @@ public class BundleRechargeActivity extends AppCompatActivity {
     TextInputEditText msisdnEditText;
     ImageButton backImageButton;
     String MSISDN = "";
+    String subscriptionId;
     LinearLayout bundleLinearLayout;
 
-    String[] tabTitle={"Voice Bundles","Data Plans","Juice Up", "Starter Plans", "Sms Plans"};
+    String[] tabTitle={"Voice Bundles","Voice Plans","Data Plans","Juice Up", "Sms Plans"};
 
 
     @Override
@@ -96,8 +100,9 @@ public class BundleRechargeActivity extends AppCompatActivity {
                             @Override
                             public void success(DataModel.DataType type, List<DataModel> data) {
                                 final UserLogin userLogin = (UserLogin) data.get(0);
-
+                                subscriptionId = userLogin.subscriptionId;
                                 if (userLogin.status.equals("success")) {
+                                    RegistrationData.setSubscripiptionID(subscriptionId);
                                     ProgressDialogUtil.stopProgressDialog(progressDialog);
                                     final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
                                     alertDialog.setCancelable(false);
@@ -186,14 +191,16 @@ public class BundleRechargeActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         voceBundleFragment=new VoiceBundleFragment();
+        voicePlansFragment=new VoicePlansFragment();
         dataPlansFragment=new DataPlansFragment();
         juiceUpPlansFragment=new JuiceUpPlansFragment();
-        starterPlansFragment=new StarterPlansFragment();
+        //starterPlansFragment=new StarterPlansFragment();
         smsPlansFragment=new SmsPlansFragment();
         adapter.addFragment(voceBundleFragment,"Voice Bundles");
+        adapter.addFragment(voicePlansFragment, "Voice Plans");
         adapter.addFragment(dataPlansFragment,"Data Plans");
         adapter.addFragment(juiceUpPlansFragment,"Juice Up");
-        adapter.addFragment(starterPlansFragment, "Starter Plans");
+        //adapter.addFragment(starterPlansFragment, "Starter Plans");
         adapter.addFragment(smsPlansFragment, "Sms Plans");
         viewPager.setAdapter(adapter);
     }

@@ -110,7 +110,7 @@ public class SimReplacementForm implements DataModel {
       //  jwriter.name("lastPaymentAmout").value(lastPaymentAmout);
      //   jwriter.name("lastCalledPartyCheckLimit").value(lastCalledPartyCheckLimit);
         jwriter.name("ownerName").value(ownerName);
-        jwriter.name("email").value(email);
+        //jwriter.name("email").value(email);
         jwriter.name("msisdn").value(msisdn);
         jwriter.name("skipValidation").value(skipValidation);
         jwriter.name("airTimeAmountLoaded").value(airTimeAmountLoaded);
@@ -121,12 +121,11 @@ public class SimReplacementForm implements DataModel {
         jwriter.name("lastThreeCalledNumbers");
         getLastThreeCalledNumbersJSON(lastThreeCalledNumbers, jwriter);
 
-        jwriter.name("lastThreeSmsSentNumbers");
+        /*jwriter.name("lastThreeSmsSentNumbers");
         getLastThreeSmsNumbersJSON(lastThreeSmsSentNumbers, jwriter);
-
+*/
         jwriter.name("mostlyCalledNumbers");
         getMostlyCalledNumbersJSON(mostlyCalledNumbers, jwriter);
-
 
         jwriter.endObject();
         String json = swriter.toString();
@@ -167,7 +166,7 @@ public class SimReplacementForm implements DataModel {
         }
     }
 
-    public void getLastThreeSmsNumbersJSON(List<String> lastThreeSmsSentNumbers, JsonWriter jwriter) throws IOException {
+    /*public void getLastThreeSmsNumbersJSON(List<String> lastThreeSmsSentNumbers, JsonWriter jwriter) throws IOException {
         try {
             jwriter.beginArray();
             for (String lastThreeSmsNumberCount : lastThreeSmsSentNumbers) {
@@ -177,7 +176,7 @@ public class SimReplacementForm implements DataModel {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     public void getMostlyCalledNumbersJSON(List<String> mostlyCalledNumbers, JsonWriter jwriter) throws IOException {
         try {

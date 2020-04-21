@@ -2,6 +2,7 @@ package com.aryagami.tangerine.adapters;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -18,11 +19,12 @@ import com.aryagami.data.Constants;
 import com.aryagami.data.DataModel;
 import com.aryagami.data.NewOrderCommand;
 import com.aryagami.data.ResellerVoucherType;
-import com.aryagami.data.SubscriptionCommand;
+import com.aryagami.data.UserLogin;
 import com.aryagami.restapis.RestServiceHandler;
 import com.aryagami.tangerine.activities.AirtimeVoucherRechargeActivity;
 import com.aryagami.tangerine.activities.EVoucherRechargeActivity;
 import com.aryagami.util.BugReport;
+import com.aryagami.util.ProgressDialogUtil;
 import com.aryagami.util.ReDirectToParentActivity;
 
 import java.io.IOException;
@@ -34,6 +36,7 @@ public class ResellerTopUpVouchersListAdapter extends ArrayAdapter {
     ResellerVoucherType postVoucherData = new ResellerVoucherType();
     String servedMSISDN = "";
     String type;
+    ProgressDialog progressDialog;
     NewOrderCommand.LocationCoordinates coordinatesPost= new NewOrderCommand.LocationCoordinates();
 
     public ResellerTopUpVouchersListAdapter(Activity activity, ResellerVoucherType[] voucherTypesArray, String MSISDN, String type1, NewOrderCommand.LocationCoordinates coordinates){
@@ -95,57 +98,118 @@ public class ResellerTopUpVouchersListAdapter extends ArrayAdapter {
                 voucherDescription.setText("");
             }
 
-           if(rowItem.voucherName != null){
-               voucherName.setText(rowItem.voucherName);
-           }else{
-               voucherName.setText("");
-           }
+            if(rowItem.voucherName != null){
+                voucherName.setText(rowItem.voucherName);
+            }else{
+                voucherName.setText("");
+            }
 
-           recharge.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View v) {
-                   final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+            recharge.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
 
-                   alertDialog.setCancelable(false);
-                   alertDialog.setTitle("Alert!");
-                   alertDialog.setMessage("Confirm Voucher Recharge?");
-                   alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                       @Override
-                       public void onClick(DialogInterface dialog, int which) {
-                           dialog.dismiss();
-                       }
-                   });
-                   alertDialog.setPositiveButton("Proceed",
-                           new DialogInterface.OnClickListener() {
-                               public void onClick(final DialogInterface dialog, int id) {
-                                   RestServiceHandler serviceHandler = new RestServiceHandler();
-                                           collectData(position);
-                                   try {
-                                       serviceHandler.redeemVoucherDirect(postVoucherData, new RestServiceHandler.Callback() {
-                                           @Override
-                                           public void success(DataModel.DataType type, List<DataModel> data) {
-                                               SubscriptionCommand command = (SubscriptionCommand)data.get(0);
-                                               if(command.status.equals("success")) {
-                                                   dialog.dismiss();
-                                                   final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
-                                                   alertDialog.setCancelable(false);
-                                                   alertDialog.setIcon(R.drawable.success_icon);
-                                                   alertDialog.setMessage("Your recharge was successful!");
-                                                   alertDialog.setNeutralButton(activity.getString(R.string.ok),
-                                                           new DialogInterface.OnClickListener() {
-                                                               public void onClick(DialogInterface dialog, int id) {
-                                                                   dialog.dismiss();
-                                                                   callParentActivity();
-                                                               }
-                                                           });
+                    alertDialog.setCancelable(false);
+                    alertDialog.setTitle("Alert!");
+                    alertDialog.setMessage("Confirm Voucher Recharge?");
+                    alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    alertDialog.setPositiveButton("Proceed",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(final DialogInterface dialog, int id) {
+                                    RestServiceHandler serviceHandler = new RestServiceHandler();
+                                    collectData(position);
 
-                                                   alertDialog.show();
+                                    try {
+                                        progressDialog = ProgressDialogUtil.startProgressDialog(activity, "Please Wait.....");
 
+                                        serviceHandler.redeemVoucherDirect(postVoucherData, new RestServiceHandler.Callback() {
+                                            @Override
+                                            public void success(DataModel.DataType type, List<DataModel> data) {
+                                                UserLogin command = (UserLogin) data.get(0);
+                                                if(command.status.equals("success")) {
+                                                    ProgressDialogUtil.stopProgressDialog(progressDialog);
+                                                    dialog.dismiss();
+                                                    final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+                                                    alertDialog.setCancelable(false);
+                                                    alertDialog.setIcon(R.drawable.success_icon);
+                                                    alertDialog.setMessage("Your recharge was successful!");
+                                                    alertDialog.setNeutralButton(activity.getString(R.string.ok),
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    dialog.dismiss();
+                                                                    callParentActivity();
+                                                                }
+                                                            });
 
-                                               }else if(command.status.equals("INVALID_SESSION")){
-                                                  // MyToast.makeMyToast(activity, "Status :-"+command.status, Toast.LENGTH_SHORT);
-                                                   ReDirectToParentActivity.callLoginActivity(activity);
-                                               }else{
+                                                    alertDialog.show();
+
+                                                    /*  Invalid voucher type , You Want To Recharge */
+
+                                                }else if(command.status.equals("INVALID_SESSION")){
+                                                    // MyToast.makeMyToast(activity, "Status :-"+command.status, Toast.LENGTH_SHORT);
+                                                    ReDirectToParentActivity.callLoginActivity(activity);
+                                                }else{
+
+                                                    ProgressDialogUtil.stopProgressDialog(progressDialog);
+
+                                                    if(command.immediateRecharge != null){
+                                                        if(command.immediateRecharge){
+                                                            final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+                                                            alertDialog.setCancelable(false);
+                                                            alertDialog.setTitle("Message!");
+                                                            alertDialog.setMessage("You recharged with same service bundle recently, still you want to Recharge?");
+                                                            alertDialog.setPositiveButton("Yes",
+                                                                    new DialogInterface.OnClickListener() {
+                                                                        public void onClick(DialogInterface dialog, int id) {
+                                                                            postVoucherData.immediateRecharge = true;
+                                                                            rechargeVoucher(postVoucherData);
+                                                                        }
+                                                                    });
+                                                            alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                                    dialog.dismiss();
+                                                                    callParentActivity();
+                                                                }
+                                                            });
+                                                            alertDialog.show();
+                                                        }else{
+                                                            final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+                                                            alertDialog.setCancelable(false);
+                                                            alertDialog.setTitle("Message!");
+                                                            alertDialog.setMessage("Status: "+command.status);
+                                                            alertDialog.setNeutralButton(activity.getString(R.string.ok),
+                                                                    new DialogInterface.OnClickListener() {
+                                                                        public void onClick(DialogInterface dialog, int id) {
+                                                                            dialog.dismiss();
+                                                                            callParentActivity();
+                                                                        }
+                                                                    });
+
+                                                            alertDialog.show();
+                                                        }
+                                                    }else{
+                                                        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+                                                        alertDialog.setCancelable(false);
+                                                        alertDialog.setTitle("Message!");
+                                                        alertDialog.setMessage("Status: "+command.status);
+                                                        alertDialog.setNeutralButton(activity.getString(R.string.ok),
+                                                                new DialogInterface.OnClickListener() {
+                                                                    public void onClick(DialogInterface dialog, int id) {
+                                                                        dialog.dismiss();
+                                                                        callParentActivity();
+                                                                    }
+                                                                });
+
+                                                        alertDialog.show();
+                                                    }
+
+                                                }/*else{
                                                    final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
                                                    alertDialog.setCancelable(false);
                                                    alertDialog.setTitle("Message!");
@@ -159,26 +223,146 @@ public class ResellerTopUpVouchersListAdapter extends ArrayAdapter {
                                                            });
 
                                                    alertDialog.show();
-                                               }
-                                           }
+                                               }*/
+                                            }
 
-                                           @Override
-                                           public void failure(RestServiceHandler.ErrorCode error, String status) {
-                                               BugReport.postBugReport(activity, Constants.emailId,"ERROR"+error+"STATUS:"+status,"Activity");
-                                           }
-                                       });
-                                   } catch (IOException e) {
-                                       e.printStackTrace();
-                                       BugReport.postBugReport(activity, Constants.emailId,"STATUS:"+e.getMessage(),"Activity");
-                                   }
+                                            @Override
+                                            public void failure(RestServiceHandler.ErrorCode error, String status) {
+                                                ProgressDialogUtil.stopProgressDialog(progressDialog);
+                                                BugReport.postBugReport(activity, Constants.emailId,"ERROR"+error+"STATUS:"+status,"Activity");
+                                            }
+                                        });
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                        BugReport.postBugReport(activity, Constants.emailId,"STATUS:"+e.getMessage(),"Activity");
+                                    }
 
-                               }
-                           });
-                   alertDialog.show();
-               }
-           });
+                                }
+                            });
+                    alertDialog.show();
+                }
+            });
         }
         return rowView;
+    }
+
+    private void rechargeVoucher(ResellerVoucherType postVoucherData) {
+        try {
+            RestServiceHandler serviceHandler = new RestServiceHandler();
+            progressDialog = ProgressDialogUtil.startProgressDialog(activity, "Please Wait.....");
+            serviceHandler.redeemVoucherDirect(postVoucherData, new RestServiceHandler.Callback() {
+                @Override
+                public void success(DataModel.DataType type, List<DataModel> data) {
+                    UserLogin command = (UserLogin) data.get(0);
+                    if(command.status.equals("success")) {
+                        ProgressDialogUtil.stopProgressDialog(progressDialog);
+                        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+                        alertDialog.setCancelable(false);
+                        alertDialog.setIcon(R.drawable.success_icon);
+                        alertDialog.setMessage("Your recharge was successful!");
+                        alertDialog.setNeutralButton(activity.getString(R.string.ok),
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.dismiss();
+                                        callParentActivity();
+                                    }
+                                });
+
+                        alertDialog.show();
+
+                        /*  Invalid voucher type , You Want To Recharge */
+
+                    }else if(command.status.equals("INVALID_SESSION")){
+                        // MyToast.makeMyToast(activity, "Status :-"+command.status, Toast.LENGTH_SHORT);
+                        ReDirectToParentActivity.callLoginActivity(activity);
+                    }/*else if(command.status.equals("Invalid voucher type")){
+                        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+                        alertDialog.setCancelable(false);
+                        alertDialog.setTitle("Message!");
+                        alertDialog.setMessage("Invalid voucher type, You Want To Recharge?");
+                        alertDialog.setPositiveButton("Yes",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                            dialog.dismiss();
+                                            postVoucherData.immediateRecharge = true;
+                                            rechargeVoucher(postVoucherData);
+                                    }
+                                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                                dialogInterface.dismiss();
+                                callParentActivity();
+                            }
+                        });
+
+                        alertDialog.show();
+                    }*/else{
+                        ProgressDialogUtil.stopProgressDialog(progressDialog);
+                        if(command.immediateRecharge != null){
+                            if(command.immediateRecharge){
+                                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+                                alertDialog.setCancelable(false);
+                                alertDialog.setTitle("Message!");
+                                alertDialog.setMessage("You recharged with same service bundle recently, still you want to Recharge?");
+                                alertDialog.setPositiveButton("Yes",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                postVoucherData.immediateRecharge = true;
+                                                rechargeVoucher(postVoucherData);
+                                            }
+                                        });
+                                alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                        callParentActivity();
+                                    }
+                                });
+                                alertDialog.show();
+                            }else{
+                                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+                                alertDialog.setCancelable(false);
+                                alertDialog.setTitle("Message!");
+                                alertDialog.setMessage("Status: "+command.status);
+                                alertDialog.setNeutralButton(activity.getString(R.string.ok),
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.dismiss();
+                                                callParentActivity();
+                                            }
+                                        });
+
+                                alertDialog.show();
+                            }
+                        }else{
+                            final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+                            alertDialog.setCancelable(false);
+                            alertDialog.setTitle("Message!");
+                            alertDialog.setMessage("Status: "+command.status);
+                            alertDialog.setNeutralButton(activity.getString(R.string.ok),
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.dismiss();
+                                            callParentActivity();
+                                        }
+                                    });
+
+                            alertDialog.show();
+                        }
+                    }
+                }
+
+                @Override
+                public void failure(RestServiceHandler.ErrorCode error, String status) {
+                    ProgressDialogUtil.stopProgressDialog(progressDialog);
+                    BugReport.postBugReport(activity, Constants.emailId,"ERROR"+error+"STATUS:"+status,"Activity");
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+            BugReport.postBugReport(activity, Constants.emailId,"STATUS:"+e.getMessage(),"Activity");
+        }
     }
 
     private void callParentActivity() {
@@ -202,7 +386,9 @@ public class ResellerTopUpVouchersListAdapter extends ArrayAdapter {
         ResellerVoucherType voucherValue = voucherTypes[position];
         postVoucherData.transactionAmount = voucherValue.voucherPrice.floatValue();
         postVoucherData.voucherType = voucherValue.voucherType.toString();
+        postVoucherData.immediateRecharge = false;
         postVoucherData.resellerLocation = coordinatesPost;
+
     }
 
     static String getAlphaNumericString(int n)

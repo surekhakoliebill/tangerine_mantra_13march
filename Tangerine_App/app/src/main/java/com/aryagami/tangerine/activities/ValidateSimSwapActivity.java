@@ -6,11 +6,15 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.aryagami.R;
@@ -24,14 +28,9 @@ import com.aryagami.util.MyToast;
 import com.aryagami.util.ProgressDialogUtil;
 import com.aryagami.util.ReDirectToParentActivity;
 
-import org.apache.poi.ss.formula.functions.T;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
-import static com.aryagami.data.RegistrationData.postStaffOrder;
 
 public class ValidateSimSwapActivity extends AppCompatActivity {
 
@@ -40,7 +39,8 @@ public class ValidateSimSwapActivity extends AppCompatActivity {
     String postMSISDN;
     SimReplacementForm response;
     //TextInputEditText last_call_duration, last_called_number, last_recharge_amount, customers_name, email;
-
+    RadioButton personalRadioBtn,companyRadioBtn;
+    LinearLayout personalRegContainer , companyRegContainer;
     TextInputEditText previous_bundle, first_called_number, second_called_number, third_called_number,
                       first_sms_number, second_sms_number, third_sms_number, mostly_called_number, previous_recharge_amount,
                       customers_name, email;
@@ -61,20 +61,43 @@ public class ValidateSimSwapActivity extends AppCompatActivity {
 
         previous_bundle = (TextInputEditText) findViewById(R.id.previous_bundle_used);
         first_called_number = (TextInputEditText) findViewById(R.id.first_called_number);
-        second_called_number = (TextInputEditText) findViewById(R.id.second_called_number);
-        third_called_number = (TextInputEditText) findViewById(R.id.third_called_number);
-        first_sms_number = (TextInputEditText) findViewById(R.id.first_sms_number);
-        second_sms_number = (TextInputEditText) findViewById(R.id.second_sms_number);
-        third_sms_number = (TextInputEditText) findViewById(R.id.third_sms_number);
+        //second_called_number = (TextInputEditText) findViewById(R.id.second_called_number);
+        //third_called_number = (TextInputEditText) findViewById(R.id.third_called_number);
+        //first_sms_number = (TextInputEditText) findViewById(R.id.first_sms_number);
+        //second_sms_number = (TextInputEditText) findViewById(R.id.second_sms_number);
+        //third_sms_number = (TextInputEditText) findViewById(R.id.third_sms_number);
         mostly_called_number = (TextInputEditText) findViewById(R.id.mostly_called_number);
         previous_recharge_amount = (TextInputEditText) findViewById(R.id.previous_recharge_number);
         customers_name = (TextInputEditText) findViewById(R.id.customer_name);
-        email = (TextInputEditText) findViewById(R.id.email_sim);
+       // email = (TextInputEditText) findViewById(R.id.email_sim);
+
+        personalRadioBtn = (RadioButton) findViewById(R.id.personal11_reg_radio_btn);
+        companyRadioBtn = (RadioButton) findViewById(R.id.compnay11_reg_radio_btn);
+
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup12);
+        personalRegContainer = (LinearLayout) findViewById(R.id.reg_personal1_container);
+        companyRegContainer = (LinearLayout) findViewById(R.id.reg_company1_container);
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
+            }
+        });
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                switch (checkedId) {
+                    case R.id.personal11_reg_radio_btn:
+                        personalRegContainer.setVisibility(View.VISIBLE);
+                        companyRegContainer.setVisibility(View.GONE);
+                        break;
+                    case R.id.compnay11_reg_radio_btn:
+                        personalRegContainer.setVisibility(View.GONE);
+                        companyRegContainer.setVisibility(View.VISIBLE);
+                        break;
+                }
             }
         });
 
@@ -165,42 +188,42 @@ public class ValidateSimSwapActivity extends AppCompatActivity {
     private SimReplacementForm collectAllValidateData() {
 
         SimReplacementForm simReplacementForm = new SimReplacementForm();
-        if (!previous_bundle.getText().toString().isEmpty()) {
+        /*if (!previous_bundle.getText().toString().isEmpty()) {
             simReplacementForm.latestBundleUsed= previous_bundle.getText().toString();
         } else {
             MyToast.makeMyToast(activity, "Please enter previous bundle used", Toast.LENGTH_SHORT);
             return  null;
-        }
+        }*/
 
                 if (first_called_number.getText().toString().isEmpty()) {
-                    MyToast.makeMyToast(activity, "Please enter first Called Number", Toast.LENGTH_SHORT);
+                    MyToast.makeMyToast(activity, "Please enter Number", Toast.LENGTH_SHORT);
                     return null;
 
                 }
-        if (second_called_number.getText().toString().isEmpty()) {
+        /*if (second_called_number.getText().toString().isEmpty()) {
             MyToast.makeMyToast(activity, "Please enter second Called Number", Toast.LENGTH_SHORT);
             return null;
 
-        }
-        if (third_called_number.getText().toString().isEmpty()) {
+        }*/
+        /*if (third_called_number.getText().toString().isEmpty()) {
             MyToast.makeMyToast(activity, "Please enter third Called Number", Toast.LENGTH_SHORT);
             return null;
-        }
+        }*/
 
-        if (first_sms_number.getText().toString().isEmpty()) {
+        /*if (first_sms_number.getText().toString().isEmpty()) {
             MyToast.makeMyToast(activity, "Please enter first SMS Number", Toast.LENGTH_SHORT);
             return null;
 
-        }
-        if (second_sms_number.getText().toString().isEmpty()) {
+        }*/
+        /*if (second_sms_number.getText().toString().isEmpty()) {
             MyToast.makeMyToast(activity, "Please enter second SMS Number", Toast.LENGTH_SHORT);
             return null;
 
-        }
-        if (third_sms_number.getText().toString().isEmpty()) {
+        }*/
+        /*if (third_sms_number.getText().toString().isEmpty()) {
             MyToast.makeMyToast(activity, "Please enter third SMS Number", Toast.LENGTH_SHORT);
             return null;
-        }
+        }*/
 
 
         if (mostly_called_number.getText().toString().isEmpty()) {
@@ -214,18 +237,18 @@ public class ValidateSimSwapActivity extends AppCompatActivity {
 
         List<String> lastThreeNum =  new ArrayList<>();
         lastThreeNum.add(first_called_number.getText().toString());
-        lastThreeNum.add(second_called_number.getText().toString());
-        lastThreeNum.add(third_called_number.getText().toString());
+        //lastThreeNum.add(second_called_number.getText().toString());
+        //lastThreeNum.add(third_called_number.getText().toString());
 
         simReplacementForm.lastThreeCalledNumbers = lastThreeNum;
 
-        List<String> lastThreeSms =  new ArrayList<>();
+        /*List<String> lastThreeSms =  new ArrayList<>();
         lastThreeSms.add(first_sms_number.getText().toString());
         lastThreeSms.add(second_sms_number.getText().toString());
         lastThreeSms.add(third_sms_number.getText().toString());
 
         simReplacementForm.lastThreeSmsSentNumbers = lastThreeSms;
-
+*/
 
 
         if (!customers_name.getText().toString().isEmpty()) {
@@ -233,20 +256,35 @@ public class ValidateSimSwapActivity extends AppCompatActivity {
         } else {
             MyToast.makeMyToast(activity, "Please enter Customer Name", Toast.LENGTH_SHORT);
             return null;
-
         }
 
-        if (!email.getText().toString().isEmpty()) {
+        /*if (!email.getText().toString().isEmpty()) {
             simReplacementForm.email= email.getText().toString();
         } else {
             MyToast.makeMyToast(activity, "Please enter Email Id", Toast.LENGTH_SHORT);
             return null;
+        }*/
+
+
+        if (personalRadioBtn.isChecked()){
+            if (!previous_recharge_amount.toString().isEmpty()){
+                simReplacementForm.airTimeAmountLoaded = Double.parseDouble(previous_recharge_amount.getText().toString());
+            }
+        }else if (companyRadioBtn.isChecked()){
+            if (!previous_bundle.getText().toString().isEmpty()) {
+            simReplacementForm.latestBundleUsed= previous_bundle.getText().toString();
+        } else {
+            MyToast.makeMyToast(activity, "Please enter previous bundle used", Toast.LENGTH_SHORT);
+            return  null;
+        }
         }
 
-        if (!previous_recharge_amount.toString().isEmpty()){
+
+
+        /*if (!previous_recharge_amount.toString().isEmpty()){
             simReplacementForm.airTimeAmountLoaded = Double.parseDouble(previous_recharge_amount.getText().toString());
         }
-
+*/
         //simReplacementForm.lastCalledPartyCheckLimit = 5;
         simReplacementForm.msisdn = postMSISDN;
         simReplacementForm.skipValidation = false;

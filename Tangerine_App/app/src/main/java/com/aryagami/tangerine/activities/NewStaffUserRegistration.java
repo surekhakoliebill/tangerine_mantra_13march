@@ -80,7 +80,7 @@ public class NewStaffUserRegistration extends AppCompatActivity {
         reseller_landline_number = (TextInputEditText) findViewById(R.id.new_staff_reseller_landline_number);
 
         areaInKM = (TextInputEditText) findViewById(R.id.region_area);
-        ussd = (TextInputEditText) findViewById(R.id.ussd_number);
+        //ussd = (TextInputEditText) findViewById(R.id.ussd_number);
 
         staffRoleSpinner = (SearchableSpinner) findViewById(R.id.new_staff_role_spinner);
 
@@ -315,12 +315,12 @@ public class NewStaffUserRegistration extends AppCompatActivity {
                     MyToast.makeMyToast(activity, "Please Enter Area in KM.", Toast.LENGTH_SHORT);
                     return null;
                 }
-                if (!ussd.getText().toString().isEmpty()) {
+                /*if (!ussd.getText().toString().isEmpty()) {
                     command.ussd = ussd.getText().toString();
                 } else {
                     MyToast.makeMyToast(activity, "Please Enter USSD Number.", Toast.LENGTH_SHORT);
                     return null;
-                }
+                }*/
 
                 if (!primary_user_name.getText().toString().isEmpty()) {
                     command.userInfo.primaryPersonName = primary_user_name.getText().toString();

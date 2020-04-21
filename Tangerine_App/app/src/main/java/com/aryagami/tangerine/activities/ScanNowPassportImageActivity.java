@@ -1,7 +1,6 @@
 package com.aryagami.tangerine.activities;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,11 +24,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aryagami.BuildConfig;
-
 import com.aryagami.R;
 import com.aryagami.util.Utils;
 import com.docrecog.scan.CameraActivity;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -118,7 +115,7 @@ public class ScanNowPassportImageActivity extends BaseActivity implements View.O
             case R.id.tvLetsGo:
 
                 ScanNowPassportImageActivity.this.finish();
-                Intent intent = new Intent(getApplicationContext(),BarcodeScannerActivity.class);
+                Intent intent = new Intent(getApplicationContext(), BarcodeScannerActivity.class);
                 startActivity(intent);
                 break;
             case R.id.foreinger_scan_btn:

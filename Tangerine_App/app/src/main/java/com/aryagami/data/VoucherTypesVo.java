@@ -82,7 +82,7 @@ public class VoucherTypesVo implements DataModel, Serializable {
             if(name.equals("status"))
             {
                 typesVo.responseStatus = reader.nextString();
-            }else if(name.equals("allVouchers")) {
+            }else if(name.equals("allVouchers")&& reader.peek() != JsonToken.NULL) {
                 List<VoucherBatchVo> batchVoList= new ArrayList<VoucherBatchVo>();
                 reader.beginArray();
                 while(reader.hasNext()) {
@@ -93,18 +93,19 @@ public class VoucherTypesVo implements DataModel, Serializable {
                 }
                 typesVo.voucherVos = batchVoList;
                 reader.endArray();
-            }else if(name.equals("serviceBundleVouchers")) {
+            }else if(name.equals("serviceBundleVouchers")&& reader.peek() != JsonToken.NULL) {
                 List<VoucherBatchVo> batchVoList= new ArrayList<VoucherBatchVo>();
-                reader.beginArray();
-                while(reader.hasNext()) {
-                    reader.beginObject();
-                    VoucherBatchVo typesVo1 = readRequestsObject(reader);
-                    batchVoList.add(typesVo1);
-                    reader.endObject();
-                }
-                typesVo.serviceBundleVouchers = batchVoList;
-                reader.endArray();
-            }else if(name.equals("airtimeVouchers")) {
+                    reader.beginArray();
+                    while (reader.hasNext()) {
+                        reader.beginObject();
+                        VoucherBatchVo typesVo1 = readRequestsObject(reader);
+                        batchVoList.add(typesVo1);
+                        reader.endObject();
+                    }
+                    typesVo.serviceBundleVouchers = batchVoList;
+                    reader.endArray();
+
+            }else if(name.equals("airtimeVouchers")&& reader.peek() != JsonToken.NULL) {
                 List<VoucherBatchVo> batchVoList= new ArrayList<VoucherBatchVo>();
                 reader.beginArray();
                 while(reader.hasNext()) {

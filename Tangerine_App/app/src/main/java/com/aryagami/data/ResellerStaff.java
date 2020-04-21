@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ResellerStaff implements DataModel {
 
-  public  ResellerStaff(String userName, String roleName, String userId, String resellerId){
+  public ResellerStaff(String userName, String roleName, String userId, String resellerId){
        super();
         this.fullName = userName;
         this.userGroup = roleName;

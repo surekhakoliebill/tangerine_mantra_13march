@@ -246,7 +246,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
   public void reloadActivity(){
-        Intent intent = new Intent(activity,StaffByResellerActivity.class);
+        Intent intent = new Intent(activity, StaffByResellerActivity.class);
         activity.startActivity(intent);
   }
 }

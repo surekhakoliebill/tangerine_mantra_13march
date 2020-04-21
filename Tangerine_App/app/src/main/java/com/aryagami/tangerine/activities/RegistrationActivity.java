@@ -4,23 +4,7 @@ package com.aryagami.tangerine.activities;
  * Created by aryagami on 11/10/17.
  */
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Spinner;
-
-import com.aryagami.R;
-import com.aryagami.data.UserRegistration;
-import com.aryagami.tangerine.fragments.*;
-import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
 
 
 /**

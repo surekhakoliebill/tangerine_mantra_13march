@@ -2,22 +2,21 @@ package com.aryagami.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.aryagami.data.Constants;
-import com.aryagami.data.PlanGroup;
 import com.aryagami.data.UserRegistration;
 import com.google.gson.Gson;
 
 /**
  * Created by aryagami on 6/6/17.
  */
-public class UserSession   {
+public class UserSession {
     static private String userId = null;
     static private String userGroup = null;
     static private String sessionKey = null;
     static private String servedMSISDN = null;
     static private String resellerId = null;
+    static private String resellerCode = null;
     static private String aggregator = null;
     static private String resellerName = null;
     static private String subscriptionId = null;
@@ -30,11 +29,11 @@ public class UserSession   {
 
         Gson gson = new Gson();
         String json = sharedpreferences.getString("allUserInformation", null);
-        allUserInformation = gson.fromJson(json,UserRegistration.class);
+        allUserInformation = gson.fromJson(json, UserRegistration.class);
         return allUserInformation;
     }
 
-    public static void setAllUserInformation(Context context,UserRegistration allUserInformation) {
+    public static void setAllUserInformation(Context context, UserRegistration allUserInformation) {
         UserSession.allUserInformation = allUserInformation;
         if(allUserInformation != null){
             sharedpreferences = context.getSharedPreferences(Constants.USERSESSIONINFO, Context.MODE_PRIVATE);
@@ -187,6 +186,34 @@ public class UserSession   {
         }
     }
 
+
+    public static String getResellerCode(Context context) {
+
+        if (resellerCode == null) {
+            sharedpreferences = context.getSharedPreferences(Constants.USERSESSIONINFO, Context.MODE_PRIVATE);
+            resellerCode = sharedpreferences.getString("resellerCode", null);
+        }
+
+        return resellerCode;
+    }
+
+    public static void setResellerCode(Context context, String resellerCode) {
+        UserSession.resellerCode = resellerCode;
+        if (resellerCode != null) {
+
+            sharedpreferences = context.getSharedPreferences(Constants.USERSESSIONINFO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putString("resellerCode", resellerCode);
+            editor.commit();
+        } else {
+            UserSession.resellerCode = null;
+            sharedpreferences = context.getSharedPreferences(Constants.USERSESSIONINFO, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.remove("resellerCode");
+            editor.commit();
+        }
+    }
+
     public static String getAggregator(Context context){
         if (aggregator == null){
             sharedpreferences = context.getSharedPreferences(Constants.USERSESSIONINFO, Context.MODE_PRIVATE);
@@ -259,6 +286,16 @@ public class UserSession   {
             editor.commit();
         }
 
+    }
+
+    public static String getSubscriptionId(Context context) {
+
+        if (subscriptionId == null) {
+            sharedpreferences = context.getSharedPreferences(Constants.USERSESSIONINFO, Context.MODE_PRIVATE);
+            subscriptionId = sharedpreferences.getString("subscriptionId", null);
+        }
+
+        return subscriptionId;
     }
 
 

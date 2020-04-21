@@ -30,6 +30,7 @@ public interface DataModel {
         SimReplacementForm,
         SimDocumentUpload,
         ServiceBundleDetailVo,
+        AirtimeValue,
         GetAllInfo,
         VoucherTypesVo,
         ResellerRequestCommand,

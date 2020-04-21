@@ -700,6 +700,47 @@ public class EditMandatoryDocsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (userRegistration.registrationType.equals("company")) {
                     collectPdfDocs();
+
+                } else if (userRegistration.registrationType.equals("personal")) {
+
+                    collectUserDocs();
+
+                }
+                if(userRegistration.userDocs.size() != 0){
+                    uploadDocumentCommand(userRegistration.userDocs);
+                }else{
+                    updateUserDetails();
+                }
+
+            }
+        });
+
+
+
+
+        /*updateUser.setOnClickListener(new View.OnClickListener() {
+                                          @Override
+                                          public void onClick(View v) {
+
+                                              if (userRegistration.registrationType.equals("company")) {
+                                                  collectPdfDocs();
+
+                                              } else if (userRegistration.registrationType.equals("personal")) {
+
+                                                  collectUserDocs();
+
+                                              }
+                                              uploadDocumentCommand(userRegistration.userDocs);
+                                          }
+                                      });*/
+
+
+
+        /*updateUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (userRegistration.registrationType.equals("company")) {
+                    collectPdfDocs();
                 } else if (userRegistration.registrationType.equals("personal")) {
                     collectUserDocs();
                 }
@@ -708,7 +749,7 @@ public class EditMandatoryDocsActivity extends AppCompatActivity {
 
             }
         });
-
+*/
        /* // update Mandatory Documents
         updateUser.setOnClickListener(new View.OnClickListener() {
             @Override

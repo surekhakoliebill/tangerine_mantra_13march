@@ -4,7 +4,7 @@ package com.aryagami.data;
  * Created by root on 7/7/17.
  */
 
-public class Notification{
+public class Notification {
 
         public String date ;
         public String userId;

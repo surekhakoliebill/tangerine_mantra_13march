@@ -635,7 +635,7 @@ public class FingerPrintScannerActivity extends Activity implements FM220_Scanne
                                     activity.finish();
                                     RegistrationData.setIsScanICCID(false);
                                     ScanData.setScannedBarcodeData(null);
-                                    Intent intent = new Intent(activity,BarcodeScannerActivity.class);
+                                    Intent intent = new Intent(activity, BarcodeScannerActivity.class);
                                     startActivity(intent);
                                 }
                             });
@@ -973,7 +973,7 @@ public class FingerPrintScannerActivity extends Activity implements FM220_Scanne
     public boolean isStoragePermissionGranted() {
         String TAG = "Storage Permission";
         if (Build.VERSION.SDK_INT >= 23) {
-            if (this.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            if (this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
                 Log.v(TAG, "Permission is granted");
                 return true;

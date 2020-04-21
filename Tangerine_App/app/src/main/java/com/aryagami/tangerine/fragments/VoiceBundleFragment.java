@@ -17,6 +17,7 @@ import com.aryagami.data.DataModel;
 import com.aryagami.data.PlanGroup;
 import com.aryagami.data.RegistrationData;
 import com.aryagami.restapis.RestServiceHandler;
+import com.aryagami.tangerine.adapters.BundlePlansListingAdapter;
 import com.aryagami.util.MyToast;
 import com.aryagami.util.ProgressDialogUtil;
 
@@ -30,7 +31,6 @@ public class VoiceBundleFragment extends Fragment {
     ProgressDialog progressDialog;
     PlanGroup[] planGroups,planGroups1;
     List<PlanGroup> planGroupsList = new ArrayList<>();
-
     public VoiceBundleFragment(){
 
     }
@@ -174,7 +174,7 @@ public class VoiceBundleFragment extends Fragment {
             planGroups1 = new PlanGroup[planGroupsList.size()];
             planGroupsList.toArray(planGroups1);
 
-            ArrayAdapter adapter = new BundlePlansListingAdapter(getContext(), planGroups1);
+            ArrayAdapter adapter = new BundlePlansListingAdapter(getContext(), planGroups1 );
             bundlerechargelist.setAdapter(adapter);
 
         }else {

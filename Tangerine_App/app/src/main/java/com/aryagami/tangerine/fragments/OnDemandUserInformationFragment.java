@@ -37,7 +37,6 @@ import com.aryagami.data.UserLogin;
 import com.aryagami.data.UserRegistration;
 import com.aryagami.restapis.RestServiceHandler;
 import com.aryagami.tangerine.activities.FingerPrintScannerActivity;
-import com.aryagami.tangerine.activities.MFS100Test;
 import com.aryagami.tangerine.activities.OnDemandNewOrderActivity;
 import com.aryagami.tangerine.activities.ScanNowPassportImageActivity;
 import com.aryagami.tangerine.activities.ScannerActivity;
@@ -53,7 +52,7 @@ import java.util.List;
 
 public class OnDemandUserInformationFragment extends Fragment {
 
-    RadioButton personalRadioBtn, retailerRadioBtn, companyRadioBtn, nationalBtn, foreignerBtn, refugeeBtn;
+    RadioButton personalRadioBtn, retailerRadioBtn,  companyRadioBtn, nationalBtn, foreignerBtn, refugeeBtn;
     LinearLayout personalRegContainer , companyRegContainer, nationalContainer, foreignerContainer, refugeeContainer, genderLayout;
     UserRegistration userRegistrationData, userRegistration;
     ProgressDialog progressDialog;
@@ -118,7 +117,7 @@ public class OnDemandUserInformationFragment extends Fragment {
         verifyText = (TextView)view.findViewById(R.id.verify_text);
 
         backButton = (Button)view.findViewById(R.id.cancel_btn);
-         btnsave=(Button)view.findViewById(R.id.savecontinue12_btn);
+        btnsave=(Button)view.findViewById(R.id.savecontinue12_btn);
 
         if(UserSession.getAllUserInformation(getContext())!= null){
             final AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
@@ -165,9 +164,86 @@ public class OnDemandUserInformationFragment extends Fragment {
         btnsave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String idNumber, userType;
 
                 userRegistrationData = collectRegistrationData(view,userRegistration);
-                if(userRegistrationData != null) {
+                if(userRegistrationData != null){
+
+                    /*if(userRegistrationData.registrationType.equals("company")){
+                        idNumber = userRegistration.tinNumber;
+                        userType = userRegistration.registrationType;
+                    }else{
+                        idNumber = userRegistration.identityNumber;
+                        userType =   userRegistrationData.nationalIdentity.trim().replace(" ","_");
+                        // userType = userRegistration.nationalIdentity;
+
+                    }*/
+
+                    if(userRegistrationData.registrationType.equals("company")){
+                        idNumber = userRegistration.tinNumber.trim();
+                        userType = userRegistration.registrationType;
+                    }else{
+                        if(userRegistrationData.nationalIdentity.equals("Refugee")){
+                            idNumber = userRegistration.refugeeIdentityNumber.trim();
+                            userType =   userRegistrationData.nationalIdentity.trim().replace(" ","_");
+                        }else{
+                            idNumber = userRegistration.identityNumber.trim();
+                            userType =   userRegistrationData.nationalIdentity.trim().replace(" ","_");
+                        }
+                    }
+                    progressDialog = ProgressDialogUtil.startProgressDialog(getActivity(),"Checking User Details......");
+
+                    RestServiceHandler serviceHandler = new RestServiceHandler();
+                    try {
+                        serviceHandler.checkExistingUser(userType, idNumber, new RestServiceHandler.Callback() {
+                            @Override
+                            public void success(DataModel.DataType type, List<DataModel> data) {
+                                UserLogin response = (UserLogin)data.get(0);
+                                if(response.status.equals("success")){
+                                    ProgressDialogUtil.stopProgressDialog(progressDialog);
+
+                                    userRegistration = userRegistrationData;
+                                    RegistrationData.setOnDemandRegistrationData(userRegistration);
+                                    UserSession.setAllUserInformation(getActivity(),userRegistration);
+
+                                    android.support.v4.app.FragmentTransaction fr=getFragmentManager().beginTransaction();
+                                    fr.replace(R.id.fragment_container_registration,new OnDemandBillingAddressFragment());
+                                    fr.commit();
+
+                                }else if(response.status.equals("INVALID_SESSION")){
+                                    ReDirectToParentActivity.callLoginActivity(getActivity());
+                                }else{
+                                    ProgressDialogUtil.stopProgressDialog(progressDialog);
+                                    final AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+                                    alertDialog.setCancelable(false);
+                                    alertDialog.setTitle("Alert!");
+                                    alertDialog.setMessage("Status: "+response.status);
+                                    alertDialog.setNeutralButton(getResources().getString(R.string.ok),
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.dismiss();
+                                                }
+                                            });
+                                    alertDialog.show();
+                                }
+                            }
+
+                            @Override
+                            public void failure(RestServiceHandler.ErrorCode error, String status) {
+                                ProgressDialogUtil.stopProgressDialog(progressDialog);
+                                BugReport.postBugReport(getActivity(), Constants.emailId,"ERROR:"+error+"STATUS:"+status,"Checking User");
+                            }
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        BugReport.postBugReport(getActivity(), Constants.emailId,"MESSAGE:"+e.getMessage()+"Cause:"+e.getCause(),"Checking User");
+                    }
+
+                }else{
+                    userRegistrationData = userRegistration;
+                }
+
+                /*if(userRegistrationData != null) {
                     userRegistration = userRegistrationData;
                     RegistrationData.setOnDemandRegistrationData(userRegistration);
                     UserSession.setAllUserInformation(getActivity(),userRegistration);
@@ -177,7 +253,7 @@ public class OnDemandUserInformationFragment extends Fragment {
                     fr.commit();
                 }else{
                     userRegistrationData = userRegistration;
-                }
+                }*/
             }
         });
 
@@ -201,24 +277,23 @@ public class OnDemandUserInformationFragment extends Fragment {
         foreigner_nationality = (TextInputEditText) view.findViewById(R.id.foreigner_nationality_id);
         surname = (TextInputEditText) view.findViewById(R.id.surname);
 
-        if (UserSession.getUserGroup(getContext()).equals("Reseller Distributor")) {
+        if(UserSession.getUserGroup(getContext()).equals("Reseller Distributor")){
             retailerRadioBtn.setVisibility(View.VISIBLE);
-        } else {
+        }else {
             retailerRadioBtn.setVisibility(View.GONE);
         }
 
-        if (nationalBtn.isChecked()) {
+        if(nationalBtn.isChecked()){
+            RegistrationData.setIsForeigner(false);
             RegistrationData.setIsUgandan(true);
             RegistrationData.setIsRefugee(false);
-            RegistrationData.setIsForeigner(false);
         }
 
         if(RegistrationData.getIsPassportScan()){
+            RegistrationData.setIsForeigner(true);
             RegistrationData.setIsUgandan(false);
             RegistrationData.setIsRefugee(false);
-            RegistrationData.setIsForeigner(true);
         }
-
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, passportTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
@@ -425,7 +500,7 @@ public class OnDemandUserInformationFragment extends Fragment {
                                         alertDialog.show();
                                     }
 
-                                   // MyToast.makeMyToast(getActivity(), userLogin.status, Toast.LENGTH_SHORT).show();
+                                    // MyToast.makeMyToast(getActivity(), userLogin.status, Toast.LENGTH_SHORT).show();
                                 }
                             }
 
@@ -460,7 +535,7 @@ public class OnDemandUserInformationFragment extends Fragment {
                     userRegistration.individualId = userRegistration.refugeeIdentityNumber;
                     userRegistration.fingerprint = RegistrationData.getRefugeeThumbEncodedData();
 
-                    Intent intent = new Intent(getActivity(), MFS100Test.class);
+                    Intent intent = new Intent(getActivity(), FingerPrintScannerActivity.class);
                     intent.putExtra("ScanningType", "refugeeUser");
                     intent.putExtra("refugeeData", userRegistration);
                     startActivityForResult(intent, 101);
@@ -611,9 +686,9 @@ public class OnDemandUserInformationFragment extends Fragment {
                         personalRegContainer.setVisibility(View.VISIBLE);
                         companyRegContainer.setVisibility(View.GONE);
                         if(nationalBtn.isChecked()){
+                            RegistrationData.setIsForeigner(false);
                             RegistrationData.setIsUgandan(true);
                             RegistrationData.setIsRefugee(false);
-                            RegistrationData.setIsForeigner(false);
                             btnsave.setVisibility(View.INVISIBLE);
                         }else{
                             btnsave.setVisibility(View.VISIBLE);
@@ -630,9 +705,9 @@ public class OnDemandUserInformationFragment extends Fragment {
                         personalRegContainer.setVisibility(View.VISIBLE);
                         companyRegContainer.setVisibility(View.GONE);
                         if(nationalBtn.isChecked()){
+                            RegistrationData.setIsForeigner(false);
                             RegistrationData.setIsUgandan(true);
                             RegistrationData.setIsRefugee(false);
-                            RegistrationData.setIsForeigner(false);
                             btnsave.setVisibility(View.INVISIBLE);
                         }else{
                             btnsave.setVisibility(View.VISIBLE);
@@ -724,7 +799,6 @@ public class OnDemandUserInformationFragment extends Fragment {
                                     RegistrationData.setRoles(rolesArray);
                                     for (Roles role1 : rolesArray) {
                                         if (role1.roleName != null) {
-
                                             if (role1.roleName.equals("Consumer")) {
                                                 userRegistration.roleId = role1.roleId.longValue();
                                                 userRegistration.roleName = role1.roleName.toString();
@@ -745,7 +819,7 @@ public class OnDemandUserInformationFragment extends Fragment {
 
                 @Override
                 public void failure(RestServiceHandler.ErrorCode error, String status) {
-                   // MyToast.makeMyToast(getActivity(), "STATUS: "+status+"\n ERROR"+error, Toast.LENGTH_SHORT);
+                    // MyToast.makeMyToast(getActivity(), "STATUS: "+status+"\n ERROR"+error, Toast.LENGTH_SHORT);
                     BugReport.postBugReport(getActivity(), Constants.emailId,"Error:"+error+"Status"+status,"");
                 }
             });
@@ -766,13 +840,13 @@ public class OnDemandUserInformationFragment extends Fragment {
     private void setScannedData(ScanData scannedBarcodeData) {
 
         if (scannedBarcodeData.getLastName() != null) {
-            surname.setText(scannedBarcodeData.getLastName().toString());
+            surname.setText(scannedBarcodeData.getLastName());
         } else {
             surname.setText("");
         }
 
         if (scannedBarcodeData.getFirstName() != null) {
-            give_name.setText(scannedBarcodeData.getFirstName().toString());
+            give_name.setText(scannedBarcodeData.getFirstName());
         } else {
             give_name.setText("");
         }
@@ -833,14 +907,72 @@ public class OnDemandUserInformationFragment extends Fragment {
         c_alternate_user_name.setText(reg.alternatePersonName);
         c_alternate_phone_number.setText(reg.alternatePhoneNumber);
         c_alternate_email.setText(reg.alternatePersonEmailId);
- }
+    }
 
 
     private void setScannedDataValues(ScanData scanData) {
 
-        if(scanData.getFirstName().toString() != null | scanData.getLastName().toString()!= null | scanData.getPassportNo().toString() != null | scanData.getCountry().toString() != null | scanData.getDateOfBirth() != null){
+        if(scanData.getFirstName() != null){
+            if(scanData.getFirstName().trim().contains("<")){
+                String givenName = scanData.getFirstName().replace("<"," ");
+                give_name.setText(givenName);
+            }else if(scanData.getFirstName().trim().contains(">")){
+                String givenName = scanData.getFirstName().replace(">"," ");
+                give_name.setText(givenName);
+            }else{
+                give_name.setText(scanData.getFirstName());
+            }
 
-            give_name.setText(scanData.getFirstName().toString());
+        }else{
+            give_name.setText("");
+        }
+
+        if(scanData.getLastName() != null){
+            if(scanData.getLastName().trim().contains("<")){
+                String lastName = scanData.getLastName().replace("<"," ");
+                surname.setText(lastName);
+            }else if(scanData.getLastName().trim().contains(">")){
+                String lastName = scanData.getLastName().replace(">"," ");
+                surname.setText(lastName);
+            }else{
+                surname.setText(scanData.getLastName());
+            }
+
+        }else{
+            surname.setText("");
+        }
+
+        if(scanData.getPassportNo() != null){
+            document_id.setText(scanData.getPassportNo());
+            foreigner_passport_no.setText(scanData.getPassportNo());
+
+        }else{
+            document_id.setText("");
+            foreigner_passport_no.setText("");
+        }
+
+        if(scanData.getCountry() != null){
+            foreigner_nationality.setText(scanData.getCountry());
+            ugandaNationality.setText(scanData.getCountry());
+        }else{
+            foreigner_nationality.setText("");
+            ugandaNationality.setText("");
+        }
+
+        if(scanData.ugandanNationalId != null){
+            national_id_number.setText(scanData.ugandanNationalId);
+        }
+
+        if(scanData.getDateOfBirth() != null) {
+            String dob = scanData.getDateOfBirth();
+            if (dob != null) {
+                datePickerText.setText(dob.replace("-", "/"));
+            }
+        }
+
+       /* if(scanData.getFirstName() != null | scanData.getLastName()!= null | scanData.getPassportNo() != null | scanData.getCountry() != null | scanData.getDateOfBirth() != null){
+
+
 
             surname.setText(scanData.getLastName().toString());
             document_id.setText(scanData.getPassportNo().toString());
@@ -848,7 +980,7 @@ public class OnDemandUserInformationFragment extends Fragment {
             ugandaNationality.setText(scanData.getCountry().toString());
 
             if(scanData.getDateOfBirth() != null) {
-                String dob = scanData.getDateOfBirth().toString();
+                String dob = scanData.getDateOfBirth();
                 if (dob != null) {
                     datePickerText.setText(dob.replace("-", "/"));
                 }
@@ -863,15 +995,14 @@ public class OnDemandUserInformationFragment extends Fragment {
             }
         }else{
             MyToast.makeMyToast(getActivity(),"Please Scan your Document.", Toast.LENGTH_SHORT);
-        }
+        }*/
     }
-
 
     private UserRegistration collectRegistrationData(View view, UserRegistration userRegistration) {
 
         userRegistration.resellerCode = UserSession.getResellerId(getContext());
 
-        if( personalRadioBtn.isChecked() || retailerRadioBtn.isChecked()) {
+        if( personalRadioBtn.isChecked() || retailerRadioBtn.isChecked()  ) {
 
             EditText email_id = (EditText) view.findViewById(R.id.email_id);
 
@@ -1042,9 +1173,10 @@ public class OnDemandUserInformationFragment extends Fragment {
                 Toast.makeText(getActivity(), "Please Enter Primary Phone Number", Toast.LENGTH_SHORT).show();
                 return null;
             }
-            if (personalRadioBtn.isChecked()){
-            userRegistration.registrationType = "personal";
-            }else if (retailerRadioBtn.isChecked()){
+
+            if(personalRadioBtn.isChecked()) {
+                userRegistration.registrationType = "personal";
+            }else if(retailerRadioBtn.isChecked()){
                 userRegistration.registrationType = "retailer";
             }
 
@@ -1157,13 +1289,6 @@ public class OnDemandUserInformationFragment extends Fragment {
         userRegistration.password = "e01fa62b94da7b8c67c5c518793ea41464151b83196fd59c4bb8ba3753cd7203";
 
 
-        /*if (userRegistration.registrationType.equals("personal")){
-            userRegistration.userGroup = "Consumer";
-        }else if (userRegistration.registrationType.equals("retailer")){
-            userRegistration.userGroup = "Reseller Retailer";
-        }
-
-        userRegistration.password = "e01fa62b94da7b8c67c5c518793ea41464151b83196fd59c4bb8ba3753cd7203";*/
         return userRegistration;
     }
 

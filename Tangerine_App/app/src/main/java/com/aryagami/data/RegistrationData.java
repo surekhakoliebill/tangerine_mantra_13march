@@ -407,6 +407,16 @@ public class RegistrationData implements Serializable {
 
     public static Double currentLatitude;
 
+    public static String getSubscripiptionID() {
+        return subscripiptionID;
+    }
+
+    public static void setSubscripiptionID(String subscripiptionID) {
+        RegistrationData.subscripiptionID = subscripiptionID;
+    }
+
+    public static String subscripiptionID;
+
     public static Map<String, NewOrderCommand.ProductListing> getMapList() {
         return mapList;
     }
@@ -487,4 +497,5 @@ public class RegistrationData implements Serializable {
     }
 
     public static Boolean enableMobileMoneyReg = false;
+
 }

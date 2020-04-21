@@ -17,6 +17,7 @@ import com.aryagami.data.DataModel;
 import com.aryagami.data.PlanGroup;
 import com.aryagami.data.RegistrationData;
 import com.aryagami.restapis.RestServiceHandler;
+import com.aryagami.tangerine.adapters.BundlePlansListingAdapter;
 import com.aryagami.util.MyToast;
 import com.aryagami.util.ProgressDialogUtil;
 

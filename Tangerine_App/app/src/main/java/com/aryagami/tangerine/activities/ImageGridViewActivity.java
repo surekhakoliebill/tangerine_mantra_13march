@@ -158,7 +158,7 @@ Activity activity = this;
             public boolean onKey(View v, int keyCode, KeyEvent event) {
 
                 try {
-                    if (event.getKeyCode() == android.view.KeyEvent.KEYCODE_BACK) {
+                    if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
 
                         hideSoftKeyboard(ImageGridViewActivity.this);
                         documentTitle.setVisibility(View.VISIBLE);
@@ -177,7 +177,7 @@ Activity activity = this;
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
-                if (event != null && event.getAction() != android.view.KeyEvent.ACTION_DOWN) {
+                if (event != null && event.getAction() != KeyEvent.ACTION_DOWN) {
                     return false;
                 }
 
@@ -185,7 +185,7 @@ Activity activity = this;
                     return false;
                 }
 
-                if (event.getKeyCode() == android.view.KeyEvent.KEYCODE_ENTER) {
+                if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                 }
                 return false;
             }
@@ -401,7 +401,7 @@ Activity activity = this;
                 activity.grantUriPermission(provider, fileUri1, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 File cacheDir = getApplicationContext().getCacheDir();
-                Uri fileUri = MyCameraApplicationUtil.getOutputMediaFileUri(MyCameraApplicationConstants.documentName,MyCameraApplicationUtil.MEDIA_TYPE_IMAGE, getApplicationContext()); // create a file to save the image
+                Uri fileUri = MyCameraApplicationUtil.getOutputMediaFileUri(MyCameraApplicationConstants.documentName, MyCameraApplicationUtil.MEDIA_TYPE_IMAGE, getApplicationContext()); // create a file to save the image
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
                 startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
             }
@@ -429,7 +429,7 @@ Activity activity = this;
         Log.i(LOG_TAG, "activtiy result system");
         switch (requestCode) {
             case CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE:
-                Log.d(LOG_TAG,"Doc name: "+MyCameraApplicationConstants.documentName+" path:"+MyCameraApplicationConstants.documentPath);
+                Log.d(LOG_TAG,"Doc name: "+ MyCameraApplicationConstants.documentName+" path:"+ MyCameraApplicationConstants.documentPath);
                 String docName = getIntent().getStringExtra("docName");
                 Log.d(LOG_TAG,"docname : "+docName);
                 showThumbnailView(MyCameraApplicationConstants.documentName);
@@ -438,7 +438,7 @@ Activity activity = this;
             case ANDROID_GALLERY_ACTIVITY:
 
                 File tempFile = null;
-                Log.d(LOG_TAG,"In Gallery, Doc name: "+MyCameraApplicationConstants.documentName);
+                Log.d(LOG_TAG,"In Gallery, Doc name: "+ MyCameraApplicationConstants.documentName);
                 docName = getIntent().getStringExtra("docName");
                 Log.d(LOG_TAG,"Doc name : "+docName);
                 Uri imgUri = null;

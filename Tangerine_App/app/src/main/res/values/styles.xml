@@ -157,48 +157,48 @@
 
 
 
-<!--
+    <!--
 
 
 
-<resources xmlns:tools="http://schemas.android.com/tools">
+    <resources xmlns:tools="http://schemas.android.com/tools">
 
-    &lt;!&ndash; Base application theme. &ndash;&gt;
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        &lt;!&ndash; Customize your theme here. &ndash;&gt;
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
+        &lt;!&ndash; Base application theme. &ndash;&gt;
+        <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+            &lt;!&ndash; Customize your theme here. &ndash;&gt;
+            <item name="colorPrimary">@color/colorPrimary</item>
+            <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+            <item name="colorAccent">@color/colorAccent</item>
+        </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        &lt;!&ndash;<item name="android:textViewStyle">@style/SansationTextViewStyle</item>
-        <item name="android:editTextStyle">@style/SansationEditViewStyle</item>
-        <item name="buttonStyle">@style/SansationButtonStyle</item>&ndash;&gt;
-    </style>
-    &lt;!&ndash;<style name="SansationEditViewStyle" parent="android:Widget.EditText">
-        <item name="android:fontFamily" tools:targetApi="jelly_bean">@font/sansation_regular</item>
-    </style>
-    <style name="SansationTextViewStyle" parent="android:Widget.TextView">
-        <item name="android:fontFamily" tools:targetApi="jelly_bean">@font/sansation_regular</item>
-    </style>
+        <style name="AppTheme.NoActionBar">
+            <item name="windowActionBar">false</item>
+            <item name="windowNoTitle">true</item>
+            &lt;!&ndash;<item name="android:textViewStyle">@style/SansationTextViewStyle</item>
+            <item name="android:editTextStyle">@style/SansationEditViewStyle</item>
+            <item name="buttonStyle">@style/SansationButtonStyle</item>&ndash;&gt;
+        </style>
+        &lt;!&ndash;<style name="SansationEditViewStyle" parent="android:Widget.EditText">
+            <item name="android:fontFamily" tools:targetApi="jelly_bean">@font/sansation_regular</item>
+        </style>
+        <style name="SansationTextViewStyle" parent="android:Widget.TextView">
+            <item name="android:fontFamily" tools:targetApi="jelly_bean">@font/sansation_regular</item>
+        </style>
 
-    <style name="SansationButtonStyle" parent="android:Widget.Holo.Button">
-        <item name="android:fontFamily" tools:targetApi="jelly_bean">@font/sansation_regular</item>
-    </style>&ndash;&gt;
+        <style name="SansationButtonStyle" parent="android:Widget.Holo.Button">
+            <item name="android:fontFamily" tools:targetApi="jelly_bean">@font/sansation_regular</item>
+        </style>&ndash;&gt;
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+        <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+        <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="EditText.Login" parent="Widget.AppCompat.EditText">
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textColorHint">@android:color/darker_gray</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorControlNormal">@color/colorAccent</item>
-        <item name="colorControlActivated">@color/colorAccent</item>
-    </style>
+        <style name="EditText.Login" parent="Widget.AppCompat.EditText">
+            <item name="android:textColor">@android:color/white</item>
+            <item name="android:textColorHint">@android:color/darker_gray</item>
+            <item name="colorAccent">@color/colorAccent</item>
+            <item name="colorControlNormal">@color/colorAccent</item>
+            <item name="colorControlActivated">@color/colorAccent</item>
+        </style>
 
-</resources>-->
+    </resources>-->

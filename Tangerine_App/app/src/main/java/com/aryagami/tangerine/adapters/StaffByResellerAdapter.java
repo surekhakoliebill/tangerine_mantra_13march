@@ -13,9 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,12 +38,17 @@ import com.aryagami.util.ReDirectToParentActivity;
 
 import java.util.List;
 
-public class StaffByResellerAdapter extends ArrayAdapter {
+public class StaffByResellerAdapter extends ArrayAdapter implements CompoundButton.OnCheckedChangeListener {
     Activity activity = null;
     ResellerStaff[] resellerStaffArray;
     ProgressDialog progressDialog;
     LinearLayout linearlayout1;
     Button bckBtn;
+    Switch aSwitch;
+    TextView textView, status;
+    Boolean checked;
+
+    ResellerStaff resellerStaff = new ResellerStaff();
 
     public StaffByResellerAdapter(Activity context, ResellerStaff[] resellerStaffs) {
         super(context, R.layout.item_list_for_staff_by_reseller,resellerStaffs);
@@ -71,10 +78,27 @@ public class StaffByResellerAdapter extends ArrayAdapter {
          TextView name = (TextView)rowView.findViewById(R.id.name_text);
         TextView code = (TextView)rowView.findViewById(R.id.code_text);
         TextView createdDate = (TextView)rowView.findViewById(R.id.created_date);
-        TextView status = (TextView)rowView.findViewById(R.id.status_value);
-        Button statusChange = (Button)rowView.findViewById(R.id.activate_btn);
+        status = (TextView)rowView.findViewById(R.id.status_value);
+        //Button statusChange = (Button)rowView.findViewById(R.id.activate_btn);
+        aSwitch = (Switch)rowView.findViewById(R.id.activate_btn);
+        textView = (TextView)rowView.findViewById(R.id.textView);
         Button checkZone = (Button)rowView.findViewById(R.id.check_zone);
         Button changeZone = (Button)rowView.findViewById(R.id.change_zone);
+        aSwitch.setOnCheckedChangeListener(this);
+
+
+       /* aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(rowItem.isActive){
+                    status.setText("Active");
+                    aSwitch.isChecked();
+                }else{
+
+                    status.setText("DeActive");
+                }
+            }
+        });*/
 
         if(rowItem.fullName != null && !rowItem.fullName.isEmpty()){
             name.setText(rowItem.fullName.toString());
@@ -94,7 +118,23 @@ public class StaffByResellerAdapter extends ArrayAdapter {
         }
 
 
-        if(rowItem.isActive != null ){
+         if(rowItem.isActive != null ){
+
+            if(rowItem.isActive){
+                status.setText("Active");
+                aSwitch.setChecked(true);
+
+            }else{
+
+                status.setText("DeActive");
+                aSwitch.setChecked(false);
+
+            }
+
+        }
+
+
+       /* if(rowItem.isActive != null ){
 
             if(rowItem.isActive){
                 status.setText("Active");
@@ -107,7 +147,7 @@ public class StaffByResellerAdapter extends ArrayAdapter {
                 statusChange.setText("Activate");
             }
 
-        }
+        }*/
 
         bckBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,7 +185,7 @@ public class StaffByResellerAdapter extends ArrayAdapter {
         });
 
 
-        statusChange.setOnClickListener(new View.OnClickListener() {
+        aSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -181,6 +221,8 @@ public class StaffByResellerAdapter extends ArrayAdapter {
                         @Override
                         public void onClick(View v) {
                             popupWindow.dismiss();
+                            Intent intent = new Intent(activity, StaffByResellerActivity.class);
+                            activity.startActivity(intent);
                         }
                     });
 
@@ -329,6 +371,33 @@ public class StaffByResellerAdapter extends ArrayAdapter {
 
         return rowView;
     }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+    }
+
+   /* @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        if (resellerStaff.isActive != null) {
+           if (resellerStaff.isActive){
+               status.setText("Active");
+               aSwitch.isChecked();
+           }else {
+               status.setText("DeActive");
+
+           }
+
+           *//* if (aSwitch.isChecked()) {
+                status.setText("Active");
+                textView.setText("Activate");
+            } else {
+                textView.setText("DeActivate");
+            }*//*
+
+
+        }
+    }*/
 }
 
 

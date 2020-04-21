@@ -106,7 +106,7 @@ public class UserInformationFragment extends Fragment {
 
         datePikerLayout = (LinearLayout) view.findViewById(R.id.date_picker_layout);
         if(RegistrationData.getRegistrationData() != null) {
-            userRegistration =RegistrationData.getRegistrationData();
+            userRegistration = RegistrationData.getRegistrationData();
         }else{
             userRegistration = new UserRegistration();
         }

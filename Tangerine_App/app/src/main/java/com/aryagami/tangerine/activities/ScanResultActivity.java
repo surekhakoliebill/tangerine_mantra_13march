@@ -9,18 +9,12 @@ import android.graphics.Paint;
 import android.graphics.Shader;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-/*import com.accurascan.demo.R;
-import com.accurascandemo.model.ScanData;
-import com.docrecog.scan.CameraActivity;
-import com.docrecog.scan.RecogEngine;*/
 
 import com.aryagami.R;
 import com.aryagami.data.RegistrationData;
@@ -35,6 +29,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+/*import com.accurascan.demo.R;
+import com.accurascandemo.model.ScanData;
+import com.docrecog.scan.CameraActivity;
+import com.docrecog.scan.RecogEngine;*/
 
 
 /**
@@ -157,7 +156,7 @@ public class ScanResultActivity extends BaseActivity implements View.OnClickList
             tvRet.setText("failed");
             MyToast.makeMyToast(activity,"Incorrect Scanning, please Scan Doc",Toast.LENGTH_SHORT);
            activity.finish();
-            Intent intent = new Intent(activity,ScanNowPassportImageActivity.class);
+            Intent intent = new Intent(activity, ScanNowPassportImageActivity.class);
             startActivity(intent);
 
         }else if(RecogEngine.g_recogResult.ret == 1){
@@ -166,7 +165,7 @@ public class ScanResultActivity extends BaseActivity implements View.OnClickList
             tvRet.setText("Incorrect MRZ");
             MyToast.makeMyToast(activity,"Incorrect Scanning, please Scan Doc",Toast.LENGTH_SHORT);
             activity.finish();
-            Intent intent = new Intent(activity,ScanNowPassportImageActivity.class);
+            Intent intent = new Intent(activity, ScanNowPassportImageActivity.class);
             startActivity(intent);
         }
 

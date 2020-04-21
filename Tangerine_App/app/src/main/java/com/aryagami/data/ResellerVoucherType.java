@@ -21,11 +21,12 @@ public class ResellerVoucherType implements DataModel {
     public String subscriptionId;
     public String transactionId;
     public Float transactionAmount;
+    public Boolean immediateRecharge;
     public NewOrderCommand.LocationCoordinates resellerLocation;
 
     @Override
     public DataType getDataType() {
-        return DataModel.DataType.ResellerVoucherType;
+        return DataType.ResellerVoucherType;
     }
 
     public static List<DataModel> parseJSONResponseArray(String json) throws IOException {
@@ -104,6 +105,7 @@ public class ResellerVoucherType implements DataModel {
             jwriter.name("voucherType").value(voucherType);
             jwriter.name("transactionAmount").value(transactionAmount);
             jwriter.name("transactionId").value(transactionId);
+            jwriter.name("immediateRecharge").value(immediateRecharge);
 
             jwriter.name("resellerLocation");
             if (resellerLocation != null) {

@@ -126,6 +126,8 @@ public class ResellerVoucherRequestsListAdapter extends ArrayAdapter {
             @Override
             public void onClick(View view) {
              ResellerRequestVo requestVo = new ResellerRequestVo();
+
+             //requestVo.resellerRequestId = "f8efc963-9373-4844-925e-428f9344ccaf";
              requestVo.resellerRequestId = rowItem.requestId;
              requestVo.status = "VOUCHER_TRANSFER_REQUEST_APPROVED";
 
@@ -138,7 +140,8 @@ public class ResellerVoucherRequestsListAdapter extends ArrayAdapter {
                             @Override
                             public void success(DataModel.DataType type, List<DataModel> data) {
                                 UserLogin userLogin = (UserLogin) data.get(0);
-                                // ProgressDialogUtil.stopProgressDialog(progressDialog);
+                                //ProgressDialogUtil.stopProgressDialog(progressDialog);
+
                                 if (userLogin.status.equals("success")) {
 
                                     ProgressDialogUtil.stopProgressDialog(progressDialog);
@@ -174,7 +177,8 @@ public class ResellerVoucherRequestsListAdapter extends ArrayAdapter {
                                     });
                                     alertBuilder.create().show();
                                 }
-                            }
+
+                        }
 
                             @Override
                             public void failure(RestServiceHandler.ErrorCode error, String status) {

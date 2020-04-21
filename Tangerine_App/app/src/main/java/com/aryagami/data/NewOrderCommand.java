@@ -782,6 +782,76 @@ public class NewOrderCommand implements Serializable, DataModel {
             jwriter.endObject();
         }
     }
+   /* public void getUserRegInfoForRetailerJSON(JsonWriter jwriter) throws Exception {
+
+
+        if (userInfo != null) {
+
+            jwriter.beginObject();
+            jwriter.name("userName").value(userInfo.userName);
+            jwriter.name("fullName").value(userInfo.fullName);
+            jwriter.name("surname").value(userInfo.surname);
+            jwriter.name("nationalIdentity").value(userInfo.nationalIdentity);
+            jwriter.name("identityNumber").value(userInfo.identityNumber);
+            jwriter.name("coiNumber").value(userInfo.coiNumber);
+            jwriter.name("landLineNumber").value(userInfo.landLineNumber);
+            jwriter.name("email").value(userInfo.email);
+            jwriter.name("company").value(userInfo.company);
+            jwriter.name("phoneNumber").value(userInfo.phoneNumber);
+            jwriter.name("password").value(userInfo.password);
+            jwriter.name("currency").value(userInfo.currency);
+            jwriter.name("faxNumber").value(userInfo.faxNumber);
+            jwriter.name("tinNumber").value(userInfo.tinNumber);
+            jwriter.name("vatNumber").value(userInfo.vatNumber);
+            jwriter.name("primaryPersonName").value(userInfo.primaryPersonName);
+            jwriter.name("primaryPersonPhoneNumber").value(userInfo.primaryPersonPhoneNumber);
+            jwriter.name("primaryPersonMobileNumber").value(userInfo.primaryPersonMobileNumber);
+            jwriter.name("alternatePersonName").value(userInfo.alternatePersonName);
+            jwriter.name("alternatePhoneNumber").value(userInfo.alternatePhoneNumber);
+            jwriter.name("alternateLandLineNumber").value(userInfo.alternateLandLineNumber);
+            jwriter.name("resellerCode").value(UserSession.getResellerCode());
+            jwriter.name("userGroup").value(userInfo.userGroup);
+            jwriter.name("userDoc").value(userInfo.userDoc);
+            jwriter.name("registrationType").value(userInfo.registrationType);
+            jwriter.name("alternatePersonEmailId").value(userInfo.alternatePersonEmailId);
+            jwriter.name("primaryPersonEmailId").value(userInfo.primaryPersonEmailId);
+            jwriter.name("nationality").value(userInfo.nationality);
+            jwriter.name("refugeeIdentityNumber").value(userInfo.refugeeIdentityNumber);
+            jwriter.name("profilePicture").value(userInfo.profilePicture);
+            jwriter.name("tempUserToken").value(userInfo.tempUserToken);
+            jwriter.name("roleId").value(userInfo.roleId);
+            jwriter.name("roleName").value(userInfo.roleName);
+            jwriter.name("accountId").value(userInfo.accountId);
+            jwriter.name("billingFrequency").value(userInfo.billingFrequency);
+            jwriter.name("billingCycleId").value(userInfo.billingCycleId);
+            jwriter.name("discountType").value(userInfo.discountType);
+            jwriter.name("discountValue").value(userInfo.discountValue);
+            jwriter.name("newAccountId").value(userInfo.newAccountId);
+            jwriter.name("documentId").value(userInfo.documentId);
+            jwriter.name("dob").value(userInfo.dob);
+            jwriter.name("addressType").value(userInfo.addressType);
+            jwriter.name("doorNumber").value(userInfo.doorNumber);
+            jwriter.name("documentsUploadPending").value(userInfo.documentsUploadPending);
+            jwriter.name("address").value(userInfo.address);
+            jwriter.name("postalAddress").value(userInfo.postalAddress);
+            jwriter.name("refugeeIssueDate").value(userInfo.refugeeIssueDate);
+            jwriter.name("visaValidityDate").value(userInfo.visaValidityDate);
+            jwriter.name("visaValidityType").value(userInfo.visaValidityType);
+            jwriter.name("fingerprintVerifed").value(userInfo.fingerprintVerifed);
+            jwriter.name("passportValidityDated").value(userInfo.passportValidityDated);
+            jwriter.name("userAddressList");
+            if (userInfo.userAddressList != null)
+                getUserAddressListJSON(userInfo, jwriter);
+            jwriter.name("country").value(userInfo.country);
+            jwriter.name("city").value(userInfo.city);
+            jwriter.name("userDocs");
+            if (userInfo.userDocs != null)
+                getUserDocsListJSON(userInfo, jwriter);
+
+            jwriter.endObject();
+        }
+    }
+*/
 
     public void staffUserInfoJSON(JsonWriter jwriter) throws Exception {
 

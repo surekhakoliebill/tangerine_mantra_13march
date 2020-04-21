@@ -222,9 +222,9 @@ public class HttpHandler {
                 HttpPost httpPost = new HttpPost(url);
 
                 if(UserSession.getSessionKey()!= null){
-                    httpPost.setHeader(new BasicHeader("SESSIONID",UserSession.getSessionKey()));
+                    httpPost.setHeader(new BasicHeader("SESSIONID", UserSession.getSessionKey()));
                 }else{
-                    httpPost.setHeader(new BasicHeader("SESSIONID",Constants.sessionId));
+                    httpPost.setHeader(new BasicHeader("SESSIONID", Constants.sessionId));
 
                 }
 
@@ -252,9 +252,9 @@ public class HttpHandler {
                 HttpGet httpGet = new HttpGet(url);
                 httpGet.setHeader(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
                 if(UserSession.getSessionKey()!= null){
-                    httpGet.setHeader(new BasicHeader("SESSIONID",UserSession.getSessionKey()));
+                    httpGet.setHeader(new BasicHeader("SESSIONID", UserSession.getSessionKey()));
                 }else{
-                    httpGet.setHeader(new BasicHeader("SESSIONID",Constants.sessionId));
+                    httpGet.setHeader(new BasicHeader("SESSIONID", Constants.sessionId));
 
                 }
 /*
@@ -274,9 +274,9 @@ public class HttpHandler {
                 //httpPost.setHeader(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 
                 if(UserSession.getSessionKey()!= null){
-                    httpPost.setHeader(new BasicHeader("SESSIONID",UserSession.getSessionKey()));
+                    httpPost.setHeader(new BasicHeader("SESSIONID", UserSession.getSessionKey()));
                 }else{
-                    httpPost.setHeader(new BasicHeader("SESSIONID",Constants.sessionId));
+                    httpPost.setHeader(new BasicHeader("SESSIONID", Constants.sessionId));
                 }
 
 

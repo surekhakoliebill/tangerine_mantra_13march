@@ -29,6 +29,6 @@ public class BuildVersion extends AppCompatActivity {
         String vName = BuildConfig.VERSION_NAME;
         version.setText(vName);
         //version.setText(formattedDate+"_"+vName);
-        date.setText("06-03-2020");
+        date.setText("21-03-2020");
     }
 }

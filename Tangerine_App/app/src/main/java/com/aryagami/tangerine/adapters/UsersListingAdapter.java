@@ -24,6 +24,7 @@ import java.util.List;
 public class UsersListingAdapter extends ArrayAdapter {
     UserRegistration[] userRegistrations;
     public Activity activity = null;
+    UserRegistration userRegistration, data;
 
 
     public UsersListingAdapter(Activity activity, UserRegistration[] usersArray) {
@@ -116,7 +117,8 @@ public class UsersListingAdapter extends ArrayAdapter {
             edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(activity,EditUserInformationActivity.class);
+                    //if (userRegistration.registrationType.equals("personal")
+                    Intent intent = new Intent(activity, EditUserInformationActivity.class);
                     RegistrationData.setEditUserProfile(rowItem);
                     activity.startActivity(intent);
                 }

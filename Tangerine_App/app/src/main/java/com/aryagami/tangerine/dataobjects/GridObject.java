@@ -2,7 +2,7 @@ package com.aryagami.tangerine.dataobjects;
 
 
 
-public class GridObject{
+public class GridObject {
 
 
     private String path;

@@ -914,7 +914,7 @@ public class OnDemandAccountSetupActivity extends AppCompatActivity {
             MyToast.makeMyToast(activity, getResources().getString(R.string.Please_upload_profile_document), Toast.LENGTH_LONG);
             return null;
         }
-        if (RegistrationData.getIsUgandan()){
+        /*if (RegistrationData.getIsUgandan()){
             if (idImages.size() == 0) {
                 MyToast.makeMyToast(activity, getResources().getString(R.string.Please_upload_nin_document), Toast.LENGTH_LONG);
                 return null;
@@ -932,10 +932,10 @@ public class OnDemandAccountSetupActivity extends AppCompatActivity {
                     return null;
                 }
             }
-        }
+        }*/
 
 
-        if (RegistrationData.getIsForeigner()) {
+        /*if (RegistrationData.getIsForeigner()) {
             if (passportImages.size() == 0) {
                 MyToast.makeMyToast(activity, getResources().getString(R.string.Please_upload_passport_document), Toast.LENGTH_LONG);
                 return null;
@@ -954,9 +954,9 @@ public class OnDemandAccountSetupActivity extends AppCompatActivity {
                 MyToast.makeMyToast(activity, "Please upload index fingerprint.", Toast.LENGTH_LONG);
                 return null;
             }
-        }
+        }*/
 
-        if(RegistrationData.getIsRefugee()){
+        /*if(RegistrationData.getIsRefugee()){
             if(refugeeImages.size() ==0){
                 MyToast.makeMyToast(activity, "Please upload refugee document.", Toast.LENGTH_LONG);
                 return null;
@@ -977,7 +977,7 @@ public class OnDemandAccountSetupActivity extends AppCompatActivity {
                 }
                // return null;
             }
-        }
+        }*/
 
         if (idImages.size() != 0) {
             for (int numFiles = 0; numFiles < idImages.size(); numFiles++) {

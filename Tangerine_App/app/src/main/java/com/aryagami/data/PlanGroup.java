@@ -2,12 +2,14 @@ package com.aryagami.data;
 
 import android.util.JsonReader;
 import android.util.JsonToken;
+import android.util.JsonWriter;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -66,6 +68,7 @@ public class PlanGroup implements DataModel, Serializable {
     public Boolean isPrimaryBundle = true;
     public Long ussdSequenceId;
     public Boolean enableStaffRechargeChannel;
+    public NewOrderCommand.LocationCoordinates resellerLocation;
     //public List<PlanGroupAddonMappingVo> childPgMappings;
 
 
@@ -199,6 +202,43 @@ public class PlanGroup implements DataModel, Serializable {
             e.printStackTrace();
         }
         return planGroup;
+    }
+
+    public String getUserInfoJSON() {
+
+        StringWriter swriter = new StringWriter();
+        JsonWriter jwriter = new JsonWriter(swriter);
+        jwriter.setIndent(" ");
+
+        try {
+            jwriter.beginObject();
+            /*jwriter.name("subscriptionId").value(subscriptionId);
+            jwriter.name("voucherType").value(voucherType);
+            jwriter.name("transactionAmount").value(transactionAmount);
+            jwriter.name("transactionId").value(transactionId);*/
+
+            jwriter.name("resellerLocation");
+            if (resellerLocation != null) {
+                getLocationCoordinatesJSON(jwriter);
+            }
+            jwriter.endObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String json = swriter.toString();
+        return json;
+    }
+
+    public  void getLocationCoordinatesJSON(JsonWriter jwriter) throws IOException {
+        if(resellerLocation != null){
+            jwriter.beginObject();
+
+            jwriter.name("latitudeValue").value(resellerLocation.latitudeValue);
+            jwriter.name("longitudeValue").value(resellerLocation.longitudeValue);
+
+            jwriter.endObject();
+        }
     }
 
     @Override
