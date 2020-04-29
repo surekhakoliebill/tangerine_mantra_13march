@@ -49,7 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ResellerUploadDeliveryNoteActivity extends AppCompatActivity {
+public class ResellerUploadDeliveryNoteActivity  extends AppCompatActivity {
 
     Button uploadDeliveryNote, uploadButton, cancelButton;
     TextView deliveryNotification;

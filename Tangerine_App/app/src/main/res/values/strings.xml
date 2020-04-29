@@ -20,6 +20,7 @@
     <string name="Send">SEND</string>
     <string name="find_us">Find Us</string>
 
+    <string name="search_spinner_title">Select Filter Type</string>
 
     <string name="permission_necessary">Permission necessary</string>
     <string name="external_storage_permission_is_necessary">External storage permission is necessary</string>

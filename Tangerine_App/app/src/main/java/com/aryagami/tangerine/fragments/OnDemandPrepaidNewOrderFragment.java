@@ -5,22 +5,28 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aryagami.R;
 import com.aryagami.data.Account;
+import com.aryagami.data.Constants;
 import com.aryagami.data.DataModel;
 import com.aryagami.data.NewOrderCommand;
 import com.aryagami.data.RegistrationData;
@@ -28,6 +34,8 @@ import com.aryagami.restapis.RestServiceHandler;
 import com.aryagami.tangerine.activities.NavigationMainActivity;
 import com.aryagami.tangerine.activities.OnDemandExistingAccountDetailsActivity;
 import com.aryagami.tangerine.activities.OnDemandRegistrationActivity;
+import com.aryagami.tangerine.adapters.SearchedAccountsListAdapter;
+import com.aryagami.util.BugReport;
 import com.aryagami.util.MyToast;
 import com.aryagami.util.ProgressDialogUtil;
 import com.aryagami.util.ReDirectToParentActivity;
@@ -37,23 +45,31 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OnDemandPrepaidNewOrderFragment extends Fragment {
+public class OnDemandPrepaidNewOrderFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     NewOrderCommand newOrderCommandData;
     RadioGroup radioGroup;
-    RadioButton createNewAccountRadioButton, existingAccountRadioButton;
+    RadioButton createNewAccountRadioButton, existingAccountRadioButton, existingAccountRadioButtonBySearch;
     SearchableSpinner accountSpinner;
+    Spinner accountSearchSpinner;
     Account accounts[];
     List<String> accountList;
     String accountList1[];
-    LinearLayout accountSetupLayout;
+    LinearLayout accountSetupLayout, accountSetupSearchLayout;
     Button cancel,saveAndContinue;
     ProgressDialog progressDialog;
-    CheckBox mobileMoneyRegCheckbox;
+    CheckBox mobileMoneyRegCheckbox, searchMobileMoneyRegCheckbox;
     // AccountDetails
     LinearLayout accountDetailsLayout;
     TextView firstName, surName, identity;
     CheckBox verifyUserId;
+    Boolean isMobileMoneyAgent = false;
+    String filterType, userValue;
+    LinearLayout userNameLayout, msisdnLayout;
+    String[] filterOptions = {"UserName", "FirstName", "Surname", "Existing Number(MSISDN)","Document Id"};
+    ImageButton searchFilterTypeButton, searchMSISDNButton;
+    TextInputEditText filterTypeText, msisdnFilterType;
+    ListView searchedAccountsList;
 
     @Nullable
     @Override
@@ -74,14 +90,31 @@ public class OnDemandPrepaidNewOrderFragment extends Fragment {
 
         newOrderCommandData.isPostpaid = false;
         accountSetupLayout = (LinearLayout)view.findViewById(R.id.existing_account_container1);
+        accountSetupSearchLayout = (LinearLayout)view.findViewById(R.id.existing_account_search_container);
+
         radioGroup = (RadioGroup) view.findViewById(R.id.radioGroup);
         createNewAccountRadioButton = (RadioButton)view.findViewById(R.id.create_new_acc_radio_btn);
         existingAccountRadioButton = (RadioButton)view.findViewById(R.id.existing_acc_radio_btn);
+        existingAccountRadioButtonBySearch = (RadioButton)view.findViewById(R.id.existing_acc_radio_btn_by_search);
+
         accountSpinner = (SearchableSpinner)view.findViewById(R.id.item_one_spinner);
         accountSpinner.setTitle("Select Account");
+        accountSearchSpinner = (Spinner) view.findViewById(R.id.account_search_spinner);
 
         cancel = (Button)view.findViewById(R.id.cancel_btn);
         saveAndContinue = (Button)view.findViewById(R.id.save_and_continue);
+
+        // Filter Changes according to username, fullname etc etc..
+        userNameLayout = (LinearLayout)view. findViewById(R.id.username_layout);
+        msisdnLayout = (LinearLayout)view. findViewById(R.id.msisdn_layout);
+        msisdnLayout.setVisibility(View.GONE);
+
+        searchFilterTypeButton = (ImageButton)view.findViewById(R.id.search_filtertype_button);
+        searchMSISDNButton = (ImageButton)view.findViewById(R.id.search_msisdn_btn);
+
+        filterTypeText = (TextInputEditText)view.findViewById(R.id.filter_text);
+        msisdnFilterType = (TextInputEditText)view.findViewById(R.id.filter_msisdin_number);
+        searchedAccountsList = (ListView)view.findViewById(R.id.accounts_search_list);
 
         // to show Account details
         firstName = (TextView)view.findViewById(R.id.acc_first_name);
@@ -92,10 +125,12 @@ public class OnDemandPrepaidNewOrderFragment extends Fragment {
 
 
         mobileMoneyRegCheckbox = (CheckBox)view.findViewById(R.id.enableMobileMoneyReg);
+        searchMobileMoneyRegCheckbox = (CheckBox)view.findViewById(R.id.enable_mobile_money_reg);
 
         if(createNewAccountRadioButton.isChecked()){
             saveAndContinue.setText(getString(R.string.continue_btn));
             accountSetupLayout.setVisibility(View.GONE);
+            accountSetupSearchLayout.setVisibility(View.GONE);
             saveAndContinue.setVisibility(View.VISIBLE);
             accountDetailsLayout.setVisibility(View.GONE);
             newOrderCommandData.isNewAccount = true;
@@ -108,6 +143,7 @@ public class OnDemandPrepaidNewOrderFragment extends Fragment {
                     case R.id.create_new_acc_radio_btn:
                         saveAndContinue.setText(getString(R.string.continue_btn));
                         accountSetupLayout.setVisibility(View.GONE);
+                        accountSetupSearchLayout.setVisibility(View.GONE);
                         saveAndContinue.setVisibility(View.VISIBLE);
                         accountDetailsLayout.setVisibility(View.GONE);
                         newOrderCommandData.isNewAccount = true;
@@ -122,7 +158,7 @@ public class OnDemandPrepaidNewOrderFragment extends Fragment {
                                 mobileMoneyRegCheckbox.setVisibility(View.VISIBLE);
                                 mobileMoneyRegCheckbox.setChecked(false);
                                 setAccountDetails();
-                                // setMobileMoneyAccountDetails();
+                               // setMobileMoneyAccountDetails();
                             } else {
                                 mobileMoneyRegCheckbox.setVisibility(View.GONE);
                                 mobileMoneyRegCheckbox.setChecked(false);
@@ -136,12 +172,40 @@ public class OnDemandPrepaidNewOrderFragment extends Fragment {
                         newOrderCommandData.isNewAccount = false;
 
                         break;
+                    case R.id.existing_acc_radio_btn_by_search:
+                        newOrderCommandData.isNewAccount = false;
+                        saveAndContinue.setText(getString(R.string.save_and_continue));
+                        saveAndContinue.setVisibility(View.INVISIBLE);
+                        accountSetupSearchLayout.setVisibility(View.VISIBLE);
+
+                        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, filterOptions);
+                        adapter1.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+                        accountSearchSpinner.setAdapter(adapter1);
+                        accountSearchSpinner.setOnItemSelectedListener(OnDemandPrepaidNewOrderFragment.this);
+
+                        if(RegistrationData.getEnableMobileMoneyReg() != null) {
+                            if (RegistrationData.getEnableMobileMoneyReg()) {
+                                searchMobileMoneyRegCheckbox.setVisibility(View.VISIBLE);
+                                searchMobileMoneyRegCheckbox.setChecked(false);
+
+                            } else {
+                                searchMobileMoneyRegCheckbox.setVisibility(View.GONE);
+                                searchMobileMoneyRegCheckbox.setChecked(false);
+                            }
+                        }else {
+                            searchMobileMoneyRegCheckbox.setVisibility(View.GONE);
+                            searchMobileMoneyRegCheckbox.setChecked(false);
+                        }
+                        break;
                 }
 
             }
         });
 
-        mobileMoneyRegCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+       /*
+           use this for Old Existing Accounts for consumer & MobileMoney
+
+       mobileMoneyRegCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
                 if(checked){
@@ -157,13 +221,81 @@ public class OnDemandPrepaidNewOrderFragment extends Fragment {
                 }
             }
         });
+*/
 
+        searchMobileMoneyRegCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                if(checked){
+                    isMobileMoneyAgent = true;
+                    searchMobileMoneyRegCheckbox.setChecked(true);
+                }else{
+                    isMobileMoneyAgent = false;
+                    searchMobileMoneyRegCheckbox.setChecked(false);
+                }
+            }
+        });
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().finish();
                 Intent intent = new Intent(getActivity(), NavigationMainActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        /*searchFilterTypeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(accountSearchSpinner.getSelectedItem().equals("UserName")){
+                    filterType = "username";
+                }
+                if(!filterTypeText.getText().toString().isEmpty()){
+                    userValue = filterTypeText.getText().toString();
+                    getAccountDetailsBySearch(isMobileMoneyAgent,filterType,userValue);
+
+                }else{
+                    searchedAccountsList.setVisibility(View.GONE);
+                    MyToast.makeMyToast(getActivity(),"Please Enter Text.", Toast.LENGTH_SHORT);
+                }
+
+            }
+        });*/
+
+        searchFilterTypeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(accountSearchSpinner.getSelectedItem().equals("UserName")){
+                    filterType = "username";
+                }
+                if(!filterTypeText.getText().toString().isEmpty()){
+                    String userValues[] = filterTypeText.getText().toString().split(" ");
+                    userValue = userValues[0];
+                    getAccountDetailsBySearch(isMobileMoneyAgent,filterType,userValue);
+
+                }else{
+                    searchedAccountsList.setVisibility(View.GONE);
+                    MyToast.makeMyToast(getActivity(),"Please Enter Text.", Toast.LENGTH_SHORT);
+                }
+
+            }
+        });
+
+        searchMSISDNButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(!msisdnFilterType.getText().toString().isEmpty()){
+                    userValue = msisdnFilterType.getText().toString().trim();
+                    getAccountDetailsBySearch(isMobileMoneyAgent,filterType,userValue);
+
+                }else{
+                    searchedAccountsList.setVisibility(View.GONE);
+                    MyToast.makeMyToast(getActivity(),"Please Enter MSISDN Number.", Toast.LENGTH_SHORT);
+                }
+
             }
         });
 
@@ -181,6 +313,7 @@ public class OnDemandPrepaidNewOrderFragment extends Fragment {
                     intent.putExtra("position", accountSpinner.getSelectedItemPosition());
                     startActivity(intent);
                 }
+
                 if(createNewAccountRadioButton.isChecked()){
                     newOrderCommandData.isNewAccount= true;
                     newOrderCommandData.isPostpaid = false;
@@ -190,11 +323,20 @@ public class OnDemandPrepaidNewOrderFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), OnDemandRegistrationActivity.class);
                     startActivity(intent);
                 }
+
+                if(existingAccountRadioButtonBySearch.isChecked()){
+                    newOrderCommandData.isNewAccount= false;
+                    NewOrderCommand.setOnDemandNewOrderCommand(newOrderCommandData);
+
+                    Intent intent = new Intent(getActivity(), OnDemandExistingAccountDetailsActivity.class);
+                    intent.putExtra("position", accountSpinner.getSelectedItemPosition());
+                    startActivity(intent);
+                }
             }
         });
 
 
-       /* verifyUserId.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        verifyUserId.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b){
@@ -204,14 +346,11 @@ public class OnDemandPrepaidNewOrderFragment extends Fragment {
                 }
             }
         });
-*/
-       /* accountSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        accountSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
 
                 if(accounts != null){
-
-
                     if(accounts.length > position){
 
                         Account accountDetails = new Account();
@@ -324,7 +463,6 @@ public class OnDemandPrepaidNewOrderFragment extends Fragment {
 
             }
         });
-       */
         return view;
     }
 
@@ -354,14 +492,14 @@ public class OnDemandPrepaidNewOrderFragment extends Fragment {
                 Toast.makeText(getActivity(), "EMPTY DATA", Toast.LENGTH_SHORT).show();
             }
         }else {*/
-        RestServiceHandler serviceHandler = new RestServiceHandler();
-        try {
-            progressDialog = ProgressDialogUtil.startProgressDialog(getActivity(),"Please wait, Fetching Active Accounts...");
+            RestServiceHandler serviceHandler = new RestServiceHandler();
+            try {
+                progressDialog = ProgressDialogUtil.startProgressDialog(getActivity(),"Please wait, Fetching Active Accounts...");
 
-            serviceHandler.getAccountDetails(new RestServiceHandler.Callback() {
-                @Override
-                public void success(DataModel.DataType type, List<DataModel> data) {
-                    if (data != null) {
+                serviceHandler.getAccountDetails(new RestServiceHandler.Callback() {
+                    @Override
+                    public void success(DataModel.DataType type, List<DataModel> data) {
+                        if (data != null) {
                             /*accounts = new Account[data.size()];
                             data.toArray(accounts);
 
@@ -386,56 +524,56 @@ public class OnDemandPrepaidNewOrderFragment extends Fragment {
                                 Toast.makeText(getActivity(), "Empty Data!", Toast.LENGTH_SHORT).show();
                             }*/
 
-                        Account account = (Account)data.get(0);
-                        if(account != null){
-                            if(account.status != null)
-                                if(account.status.equals("success")){
+                            Account account = (Account)data.get(0);
+                            if(account != null){
+                                if(account.status != null)
+                                    if(account.status.equals("success")){
 
-                                    accounts = new Account[account.accountList.size()];
-                                    account.accountList.toArray(accounts);
+                                        accounts = new Account[account.accountList.size()];
+                                        account.accountList.toArray(accounts);
 
-                                    NewOrderCommand.setAccount(accounts);
+                                        NewOrderCommand.setAccount(accounts);
 
-                                    accountList = new ArrayList<String>();
-                                    for(Account acc : accounts){
-                                        accountList.add(acc.username+"-"+acc.accountId);
-                                    }
+                                        accountList = new ArrayList<String>();
+                                        for(Account acc : accounts){
+                                            accountList.add(acc.username+"-"+acc.accountId);
+                                        }
 
-                                    accountList1 = new String[accountList.size()];
-                                    accountList.toArray(accountList1);
+                                        accountList1 = new String[accountList.size()];
+                                        accountList.toArray(accountList1);
 
-                                    if(accountList1 != null) {
+                                        if(accountList1 != null) {
 
-                                        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, accountList1);
-                                        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-                                        accountSpinner.setAdapter(adapter);
-                                        saveAndContinue.setVisibility(View.VISIBLE);
-                                        ProgressDialogUtil.stopProgressDialog(progressDialog);
+                                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, accountList1);
+                                            adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+                                            accountSpinner.setAdapter(adapter);
+                                            saveAndContinue.setVisibility(View.INVISIBLE);
+                                            ProgressDialogUtil.stopProgressDialog(progressDialog);
+                                        }else{
+                                            ProgressDialogUtil.stopProgressDialog(progressDialog);
+                                            saveAndContinue.setVisibility(View.INVISIBLE);
+                                            Toast.makeText(getActivity(),"Empty Data",Toast.LENGTH_SHORT).show();
+                                        }
+                                    }else if(account.status.equals("INVALID_SESSION")){
+                                        ReDirectToParentActivity.callLoginActivity(getActivity());
                                     }else{
-                                        ProgressDialogUtil.stopProgressDialog(progressDialog);
-                                        saveAndContinue.setVisibility(View.INVISIBLE);
-                                        Toast.makeText(getActivity(),"Empty Data",Toast.LENGTH_SHORT).show();
+                                        MyToast.makeMyToast(getActivity(),"Status:"+account.status,Toast.LENGTH_SHORT);
                                     }
-                                }else if(account.status.equals("INVALID_SESSION")){
-                                    ReDirectToParentActivity.callLoginActivity(getActivity());
-                                }else{
-                                    MyToast.makeMyToast(getActivity(),"Status:"+account.status,Toast.LENGTH_SHORT);
-                                }
 
 
+                            }
                         }
                     }
-                }
 
-                @Override
-                public void failure(RestServiceHandler.ErrorCode error, String status) {
-                    ProgressDialogUtil.stopProgressDialog(progressDialog);
-                    saveAndContinue.setVisibility(View.INVISIBLE);
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                    @Override
+                    public void failure(RestServiceHandler.ErrorCode error, String status) {
+                        ProgressDialogUtil.stopProgressDialog(progressDialog);
+                        saveAndContinue.setVisibility(View.INVISIBLE);
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
     }
     private void setMobileMoneyAccountDetails() {
@@ -514,7 +652,7 @@ public class OnDemandPrepaidNewOrderFragment extends Fragment {
                                         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, accountList1);
                                         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
                                         accountSpinner.setAdapter(adapter);
-                                        saveAndContinue.setVisibility(View.VISIBLE);
+                                        saveAndContinue.setVisibility(View.INVISIBLE);
                                         ProgressDialogUtil.stopProgressDialog(progressDialog);
                                     }else{
                                         ProgressDialogUtil.stopProgressDialog(progressDialog);
@@ -543,7 +681,129 @@ public class OnDemandPrepaidNewOrderFragment extends Fragment {
         }
 
     }
+
+    private void getAccountDetailsBySearch(Boolean isMobileMoneyAgent, String filterType, String value){
+        progressDialog = ProgressDialogUtil.startProgressDialog(getActivity(),"Please wait, Fetching Relative Accounts...");
+
+        RestServiceHandler serviceHandler = new RestServiceHandler();
+
+        try {
+
+            serviceHandler.getAccountDetailsBySearch(isMobileMoneyAgent, filterType, value.trim(), new RestServiceHandler.Callback() {
+                @Override
+                public void success(DataModel.DataType type, List<DataModel> data) {
+                    if (data != null) {
+                        Account account = (Account)data.get(0);
+                        if(account != null){
+                            if(account.status != null)
+                                if(account.status.equals("success")){
+
+                                    if(account.accountList != null){
+                                        if(account.accountList.size() != 0){
+                                            accounts = new Account[account.accountList.size()];
+                                            account.accountList.toArray(accounts);
+
+                                            NewOrderCommand.setAccount(accounts);
+
+                                            searchedAccountsList.setVisibility(View.VISIBLE);
+                                            ArrayAdapter adapter = new SearchedAccountsListAdapter(getActivity(), accounts);
+                                            searchedAccountsList.setAdapter(adapter);
+                                            searchedAccountsList.deferNotifyDataSetChanged();
+                                        }else {
+                                            ProgressDialogUtil.stopProgressDialog(progressDialog);
+                                            searchedAccountsList.setVisibility(View.GONE);
+                                            MyToast.makeMyToast(getActivity(),"EMPTY DATA", Toast.LENGTH_SHORT);
+                                        }
+                                    }else{
+                                        ProgressDialogUtil.stopProgressDialog(progressDialog);
+                                        searchedAccountsList.setVisibility(View.GONE);
+                                        MyToast.makeMyToast(getActivity(),"EMPTY DATA", Toast.LENGTH_SHORT);
+                                    }
+
+                                    ProgressDialogUtil.stopProgressDialog(progressDialog);
+
+                                }else if(account.status.equals("INVALID_SESSION")){
+                                    ReDirectToParentActivity.callLoginActivity(getActivity());
+                                }else{
+                                    ProgressDialogUtil.stopProgressDialog(progressDialog);
+                                    MyToast.makeMyToast(getActivity(),"Status: "+account.status,Toast.LENGTH_SHORT);
+                                }
+
+
+                        }
+                    }else{
+                        ProgressDialogUtil.stopProgressDialog(progressDialog);
+                        searchedAccountsList.setVisibility(View.GONE);
+                        MyToast.makeMyToast(getActivity(),"EMPTY DATA", Toast.LENGTH_SHORT);
+                    }
+                }
+
+                @Override
+                public void failure(RestServiceHandler.ErrorCode error, String status) {
+                    ProgressDialogUtil.stopProgressDialog(progressDialog);
+                    saveAndContinue.setVisibility(View.INVISIBLE);
+                    BugReport.postBugReport(getActivity(), Constants.emailId,"ERROR: "+error+"\t STATUS: "+status,"Getting Accounts List using Search: Failed.");
+
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+            BugReport.postBugReport(getActivity(), Constants.emailId,"Message: "+e.getMessage()+"Error: "+e.getCause(),"Getting Accounts List using Search: Exception");
+        }
+    }
+
     public  void onTrimMemory(int level) {
         System.gc();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+
+        switch (adapterView.getId()) {
+            case R.id.account_search_spinner:
+//    String[] filterOptions = {"UserName", "FirstName", "Surname", "Existing Number(MSISDN)","Document Id"};
+                String selectedItem = adapterView.getItemAtPosition(position).toString();
+                if (selectedItem.equals("UserName")) {
+                    filterType = "username";
+                    msisdnLayout.setVisibility(View.GONE);
+                    userNameLayout.setVisibility(View.VISIBLE);
+                    filterTypeText.setHint("Username");
+
+                   /* userNameLayout.setVisibility(View.VISIBLE);
+                    msisdnLayout.setVisibility(View.GONE);
+                    usersListView.setVisibility(View.GONE);*/
+
+                } else if (selectedItem.equals("FirstName")) {
+                    filterType = "fullname";
+                    msisdnLayout.setVisibility(View.GONE);
+                    userNameLayout.setVisibility(View.VISIBLE);
+                    filterTypeText.setHint("Firstname");
+
+                }else if (selectedItem.equals("Surname")) {
+                    filterType = "surname";
+                    msisdnLayout.setVisibility(View.GONE);
+                    userNameLayout.setVisibility(View.VISIBLE);
+                    filterTypeText.setHint("Surname");
+
+                }else if (selectedItem.equals("Existing Number(MSISDN)")) {
+                    filterType = "msisdn";
+                    msisdnLayout.setVisibility(View.VISIBLE);
+                    userNameLayout.setVisibility(View.GONE);
+
+                }else if (selectedItem.equals("Document Id")) {
+                    filterType = "docid";
+
+                    msisdnLayout.setVisibility(View.GONE);
+                    userNameLayout.setVisibility(View.VISIBLE);
+                    filterTypeText.setHint("Identity Number");
+                }
+
+                break;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 }

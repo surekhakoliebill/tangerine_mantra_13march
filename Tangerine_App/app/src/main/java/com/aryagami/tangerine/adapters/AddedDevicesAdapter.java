@@ -78,6 +78,7 @@ public class AddedDevicesAdapter extends ArrayAdapter {
             public void onClick(View view) {
                 proListingArray.remove(position);
                 originalValues.remove(rowItem.imei);
+
                 RegistrationData.setMapList(originalValues);
                 notifyDataSetChanged();
             }

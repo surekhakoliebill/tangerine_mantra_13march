@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -49,6 +50,8 @@ public class AddDeviceOrderActivity extends AppCompatActivity {
     Long containerProductListingID;
     List<NewOrderCommand.ProductListing> productListingList = new ArrayList<NewOrderCommand.ProductListing>();
     NewOrderCommand.ProductListing currentListingItem;
+    TextView catrTextView;
+    int mCount=0;
 
     ProgressDialog progressDialog,progressDialog1;
     String deviceNamesArray[];
@@ -75,7 +78,7 @@ public class AddDeviceOrderActivity extends AppCompatActivity {
         addedListView = (ListView)findViewById(R.id.listview_added_devices);
         saveAndContinue = (Button)findViewById(R.id.device_continue);
         backButton = (Button)findViewById(R.id.device_back);
-
+        //catrTextView = (TextView)findViewById(R.id.cart_count);
         /*addedListView.setVisibility(View.VISIBLE);
         ArrayAdapter adapter = new AddedDevicesAdapter(activity, resellerStaffArray);
         addedListView.setAdapter(adapter);*/
@@ -173,7 +176,7 @@ public class AddDeviceOrderActivity extends AppCompatActivity {
                     command.productListings = finalProductList;
                 }
 
-                MyToast.makeMyToast(activity, "Size"+command.productListings.size(), Toast.LENGTH_SHORT);
+                //MyToast.makeMyToast(activity, "Size"+command.productListings.size(), Toast.LENGTH_SHORT);
 
                 NewOrderCommand.setOnDemandNewOrderCommand(command);
                 Intent intent = new Intent(getApplicationContext(), OnDemandNewOrderPaymentActivity.class);
@@ -194,6 +197,7 @@ public class AddDeviceOrderActivity extends AppCompatActivity {
         addMoreDevicesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if(RegistrationData.getMapList() != null){
                     mapProductListing = RegistrationData.getMapList();
                 }
@@ -201,6 +205,7 @@ public class AddDeviceOrderActivity extends AppCompatActivity {
                 if (currentListingItem != null){
 
                     if (!mapProductListing.containsKey(currentListingItem.imei)) {
+
                         productListingList.clear();
                         mapProductListing.put(currentListingItem.imei, currentListingItem);
                         RegistrationData.setMapList(mapProductListing);
@@ -209,10 +214,16 @@ public class AddDeviceOrderActivity extends AppCompatActivity {
                         }
 
                         if (productListingList.size() != 0) {
-
+                            /*mCount++;
+                            catrTextView.setText(String.valueOf(mCount));*/
+                            doIncrement();
                             addedListView.setVisibility(View.VISIBLE);
                             ArrayAdapter adapter = new AddedDevicesAdapter(activity, productListingList);
                             addedListView.setAdapter(adapter);
+
+                            //decrement();
+                            //mCount = addedListView.getAdapter().getCount();
+                            //catrTextView.setText(String.valueOf(mCount));
                             adapter.notifyDataSetChanged();
                         }else {
                             addedListView.setVisibility(View.GONE);
@@ -311,6 +322,18 @@ public class AddDeviceOrderActivity extends AppCompatActivity {
         });
 
     }
+
+    private void doIncrement(){
+        mCount++;
+        catrTextView.setText(String.valueOf(mCount));
+    }
+
+    private void decrement(){
+        mCount--;
+        catrTextView.setText(String.valueOf(mCount));
+    }
+
+
 
     private void getAllProducts() {
         RestServiceHandler serviceHandler = new RestServiceHandler();

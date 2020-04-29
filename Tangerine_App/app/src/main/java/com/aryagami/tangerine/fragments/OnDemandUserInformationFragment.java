@@ -169,7 +169,7 @@ public class OnDemandUserInformationFragment extends Fragment {
                 userRegistrationData = collectRegistrationData(view,userRegistration);
                 if(userRegistrationData != null){
 
-                    /*if(userRegistrationData.registrationType.equals("company")){
+                    if(userRegistrationData.registrationType.equals("company")){
                         idNumber = userRegistration.tinNumber;
                         userType = userRegistration.registrationType;
                     }else{
@@ -177,7 +177,7 @@ public class OnDemandUserInformationFragment extends Fragment {
                         userType =   userRegistrationData.nationalIdentity.trim().replace(" ","_");
                         // userType = userRegistration.nationalIdentity;
 
-                    }*/
+                    }
 
                     if(userRegistrationData.registrationType.equals("company")){
                         idNumber = userRegistration.tinNumber.trim();
@@ -222,6 +222,8 @@ public class OnDemandUserInformationFragment extends Fragment {
                                             new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int id) {
                                                     dialog.dismiss();
+                                                    Intent intent = new Intent(getActivity(), OnDemandNewOrderActivity.class);
+                                                    startActivity(intent);
                                                 }
                                             });
                                     alertDialog.show();
