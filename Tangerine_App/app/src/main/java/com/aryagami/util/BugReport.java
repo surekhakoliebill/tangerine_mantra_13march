@@ -29,13 +29,13 @@ public class BugReport {
                     if (response.status.equals("success")) {
 
                         MyToast.makeMyToast(activity, "Bug Reported to the Application Developer.", Toast.LENGTH_SHORT);
-                       // ReDirectToParentActivity.callNavigationActivity(activity);
+                        // ReDirectToParentActivity.callNavigationActivity(activity);
                     } else {
                         if (response.status.equals("INVALID_SESSION")) {
                             ReDirectToParentActivity.callLoginActivity(activity);
                         } else {
                             MyToast.makeMyToast(activity, "Status:"+response.status, Toast.LENGTH_SHORT);
-                          //  ReDirectToParentActivity.callNavigationActivity(activity);
+                            //  ReDirectToParentActivity.callNavigationActivity(activity);
                         }
                     }
                 }
@@ -55,20 +55,21 @@ public class BugReport {
         BugReportCommand command = new BugReportCommand();
         command.emailIds = emailIds;
         command.reportDescription = description;
-        command.reportArea = reportArea;
+        command.reportArea = reportArea+ ",\t SERVER URL:"+ Constants.serverURL;
+        //command.reportArea = reportArea;
 
         try {
             serviceHandler.postBugReport(command, new RestServiceHandler.Callback() {
                 @Override
                 public void success(DataModel.DataType type, List<DataModel> data) {
                     UserLogin response = (UserLogin) data.get(0);
-                   if(response.status != null)
-                    if (response.status.equals("success")) {
-                        Log.i("Status", response.status);
+                    if(response.status != null)
+                        if (response.status.equals("success")) {
+                            Log.i("Status", response.status);
 
-                    }else{
-                        Log.i("Status", response.status);
-                    }
+                        }else{
+                            Log.i("Status", response.status);
+                        }
                 }
                 @Override
                 public void failure(RestServiceHandler.ErrorCode error, String status) {

@@ -144,6 +144,12 @@ public class SimSwapListAdapter extends ArrayAdapter {
                     adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
                     citySpinner.setAdapter(adapter);
 
+                }else if (rowItem.state.equals("OwnerShip Verification Pending")){
+                    actionsSpinnerContainer.setVisibility(View.VISIBLE);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.activity, android.R.layout.simple_spinner_item, cityList);
+                    adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+                    citySpinner.setAdapter(adapter);
+
                 }else if (rowItem.state.equals("OwnerShip Verification Failed")){
                     actionsSpinnerContainer.setVisibility(View.VISIBLE);
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.activity, android.R.layout.simple_spinner_item, revalidate);
